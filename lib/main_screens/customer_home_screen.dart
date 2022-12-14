@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zando/main_screens/home_screen.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({Key? key}) : super(key: key);
@@ -10,7 +11,7 @@ class CustomerHomeScreen extends StatefulWidget {
 class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   int _selectedIndex = 1;
   final List<Widget> _tabs = const [
-    Center(child: Text('Home Screen'),),
+    HomeScreen(),
     Center(child: Text('Category Screen'),),
     Center(child: Text('Stores Screen'),),
     Center(child: Text('Cart Screen'),),
