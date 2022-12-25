@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.white,
-          title: FakeSearch(),
+          title:const FakeSearch(),
           bottom:const TabBar(
             isScrollable: true,
             indicatorColor: Colors.yellow,
