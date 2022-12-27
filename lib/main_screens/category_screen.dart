@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:zando/categories/accessories_category.dart';
+import 'package:zando/categories/bags_category.dart';
+import 'package:zando/categories/beauty_category.dart';
+import 'package:zando/categories/electronic_category.dart';
+import 'package:zando/categories/home_garden_category.dart';
+import 'package:zando/categories/kids_category.dart';
 import 'package:zando/categories/men_category.dart';
+import 'package:zando/categories/shoes_category.dart';
 import 'package:zando/categories/woman_category.dart';
 import 'package:zando/main_screens/home_screen.dart';
 
@@ -112,13 +119,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
         children: const [
           MenCategory(),
           WomenCategory(),
-          Center(child: Text('shoes category'),),
-          Center(child: Text('bags category'),),
-          Center(child: Text('electronics category'),),
-          Center(child: Text('accessories category'),),
-          Center(child: Text('home and garden category'),),
-          Center(child: Text('kids category'),),
-          Center(child: Text('beauty category'),),
+          ShoesCategory(),
+          BagsCategory(),
+          ElectronicsCategory(),
+          AccessoriesCategory(),
+          HomeAndGardenCategory(),
+          KidsCategory(),
+          BeautyCategory(),
         ],
       ),
     );

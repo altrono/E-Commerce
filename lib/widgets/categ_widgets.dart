@@ -25,32 +25,25 @@ class SliderBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
+                mainCategName == 'beauty'
+                    ?
+                const Text('')
+                    :
                 const Text(
                   '<<',
-                  style: TextStyle(
-                      color: Colors.brown,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 10
-                  ),
+                  style: style,
                 ),
                 Text(
                   mainCategName.toUpperCase(),
-                  style: const TextStyle(
-                      color: Colors.brown,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 10
-                  ),
+                  style: style,
                 ),
+                mainCategName == 'men'
+                ?
+                const Text('')
+                :
                 const Text(
                   '>>',
-                  style: TextStyle(
-                      color: Colors.brown,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 10
-                  ),
+                  style: style,
                 ),
               ],
             ),
@@ -61,6 +54,13 @@ class SliderBar extends StatelessWidget {
   }
 }
 
+
+const style = TextStyle(
+    color: Colors.brown,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    letterSpacing: 10
+);
 class SubCategModel extends StatelessWidget {
   final String mainCategName;
   final String subCategName;
@@ -93,7 +93,7 @@ class SubCategModel extends StatelessWidget {
               image: AssetImage(assetName),
             ),
           ),
-          Text(subcategLabel),
+          Text(subcategLabel, style: TextStyle(fontSize: 11),),
         ],
       ),
     );

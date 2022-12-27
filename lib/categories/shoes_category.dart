@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:zando/utilities/categ_list.dart';
 import '../widgets/categ_widgets.dart';
 
-class MenCategory extends StatelessWidget {
-  const MenCategory({Key? key}) : super(key: key);
+class ShoesCategory extends StatelessWidget {
+  const ShoesCategory({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,21 +20,21 @@ class MenCategory extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children:  [
-                  const CategHeaderLabel(headerLabel: 'Men'),
+                  const CategHeaderLabel(headerLabel: 'Shoes'),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.68,
                     child: GridView.count(
-                        crossAxisSpacing: 15,
-                        mainAxisSpacing: 70,
-                        crossAxisCount: 3,
-                        children: List.generate(men.length, (index) {
-                          return SubCategModel(
-                            mainCategName: 'men',
-                            subCategName: men[index],
-                            assetName: 'images/men/men$index.jpg',
-                            subcategLabel: men[index],
-                          );
-                        }),
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 70,
+                      crossAxisCount: 3,
+                      children: List.generate(shoes.length, (index) {
+                        return SubCategModel(
+                          mainCategName: 'shoes',
+                          subCategName: shoes[index],
+                          assetName: 'images/shoes/shoes$index.jpg',
+                          subcategLabel: shoes[index],
+                        );
+                      }),
                     ),
                   ),
                 ],
@@ -42,9 +42,9 @@ class MenCategory extends StatelessWidget {
             ),
           ),
           const Positioned(
-              bottom: 0,
-              right: 0,
-              child: SliderBar(mainCategName: 'men',),
+            bottom: 0,
+            right: 0,
+            child: SliderBar(mainCategName: 'shoes',),
           ),
         ],
       ),
