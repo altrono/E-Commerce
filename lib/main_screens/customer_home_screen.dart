@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:zando/main_screens/cart.dart';
 import 'package:zando/main_screens/category_screen.dart';
 import 'package:zando/main_screens/home_screen.dart';
+import 'package:zando/main_screens/stores.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
   const CustomerHomeScreen({Key? key}) : super(key: key);
@@ -14,8 +16,8 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
   final List<Widget> _tabs = const [
     HomeScreen(),
     CategoryScreen(),
-    Center(child: Text('Stores Screen'),),
-    Center(child: Text('Cart Screen'),),
+    StoresScreen(),
+    CartScreen(),
     Center(child: Text('Profile Screen'),),
   ];
   @override
