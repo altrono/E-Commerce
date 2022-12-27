@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zando/categories/men_category.dart';
+import 'package:zando/categories/woman_category.dart';
 import 'package:zando/main_screens/home_screen.dart';
 
 List<ItemsData> items = [
@@ -110,7 +111,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
         },
         children: const [
           MenCategory(),
-          Center(child: Text('women category'),),
+          WomenCategory(),
           Center(child: Text('shoes category'),),
           Center(child: Text('bags category'),),
           Center(child: Text('electronics category'),),
