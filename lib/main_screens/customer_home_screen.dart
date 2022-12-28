@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zando/main_screens/cart.dart';
 import 'package:zando/main_screens/category_screen.dart';
 import 'package:zando/main_screens/home_screen.dart';
+import 'package:zando/main_screens/profile_screen.dart';
 import 'package:zando/main_screens/stores.dart';
 
 class CustomerHomeScreen extends StatefulWidget {
@@ -18,7 +19,7 @@ class _CustomerHomeScreenState extends State<CustomerHomeScreen> {
     CategoryScreen(),
     StoresScreen(),
     CartScreen(),
-    Center(child: Text('Profile Screen'),),
+    ProfileScreen(),
   ];
   @override
   Widget build(BuildContext context) {
