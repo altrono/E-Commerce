@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zando/main_screens/category_screen.dart';
+import 'package:zando/main_screens/dashboard_screen.dart';
 import 'package:zando/main_screens/home_screen.dart';
 import 'package:zando/main_screens/stores.dart';
 
@@ -16,7 +17,7 @@ class _SupplierHomeScreenState extends State<SupplierHomeScreen> {
     HomeScreen(),
     CategoryScreen(),
     StoresScreen(),
-    Center(child: Text('Dashboard'),),
+    DashboardScreen(),
     Center(child: Text('Upload'),),
   ];
   @override
