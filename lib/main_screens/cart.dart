@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:zando/main_screens/customer_home_screen.dart';
 import 'package:zando/widgets/appbar_widgets.dart';
 
+import '../widgets/yellow_button.dart';
+
 class CartScreen extends StatefulWidget {
   const CartScreen({Key? key}) : super(key: key);
 
@@ -68,17 +70,10 @@ class _CartScreenState extends State<CartScreen> {
                 ),
               ],
             ),
-            Container(
-              height: 35,
-              width: MediaQuery.of(context).size.width * 0.45,
-              decoration: BoxDecoration(
-                color: Colors.yellow,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: MaterialButton(
-                onPressed: (){},
-                child:const Text('CHECK OUT'),
-              ),
+            YellowButton(
+              width: 0.45,
+              onPressed: (){},
+              label: 'CHECK OUT',
             )
           ],
         ),
@@ -86,3 +81,5 @@ class _CartScreenState extends State<CartScreen> {
     );
   }
 }
+
+
