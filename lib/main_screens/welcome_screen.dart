@@ -1,6 +1,23 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter/material.dart';
 import '../widgets/yellow_button.dart';
+
+const textColors = [
+  Colors.yellowAccent,
+  Colors.redAccent,
+  Colors.blueAccent,
+  Colors.green,
+  Colors.purple,
+  Colors.teal
+];
+
+const textStyles = TextStyle(
+  fontSize: 45,
+  fontWeight: FontWeight.bold,
+  fontFamily: 'Acme',
+);
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({Key? key}) : super(key: key);
@@ -9,7 +26,17 @@ class WelcomeScreen extends StatefulWidget {
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(vsync: this, duration: const Duration(seconds: 2));
+    _controller.repeat();
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,18 +52,51 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'WELCOME',
-                style: TextStyle(color: Colors.white, fontSize: 30,),
+              AnimatedTextKit(
+                  animatedTexts: [
+                    ColorizeAnimatedText(
+                        'WELCOME',
+                        textStyle: textStyles,
+                        colors: textColors,
+                    ),
+                    ColorizeAnimatedText(
+                        'ZANDO SHOP',
+                        textStyle: textStyles,
+                        colors: textColors,
+                    ),
+                  ],
+                  isRepeatingAnimation: true,
+                  repeatForever: true,
               ),
               const SizedBox(
                 height: 120,
                 width: 200,
                 child: Image(image: AssetImage('images/inapp/logo.jpg')),
               ),
-              const Text(
-                'SHOP',
-                style: TextStyle(color: Colors.white, fontSize: 30,),
+              SizedBox(
+                height: 80,
+                child: DefaultTextStyle(
+                  style: const TextStyle(
+                    fontSize: 45,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.lightBlueAccent,
+                    fontFamily: 'Acme'),
+                  child: AnimatedTextKit(
+                      repeatForever: true,
+                      isRepeatingAnimation: true,
+                      animatedTexts: [
+                        RotateAnimatedText(
+                          'SHOP',
+                        ),
+                        RotateAnimatedText(
+                          'FAST',
+                        ),
+                        RotateAnimatedText(
+                          'BUY',
+                        ),
+                      ],
+                  ),
+                ),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -74,7 +134,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Image(image: AssetImage('images/inapp/logo.jpg')),
+                            AnimatedLogo(controller: _controller),
                             YellowButton(
                               width: 0.25,
                               onPressed: (){},
@@ -124,7 +184,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           onPressed: (){},
                           label: 'Log In',
                         ),
-                        const Image(image: AssetImage('images/inapp/logo.jpg')),
+                        AnimatedLogo(controller: _controller),
                       ],
                     ),
                   ),
@@ -135,7 +195,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 25.0),
                 child: Container(
                   height: 82,
-                  decoration: const BoxDecoration(color: Colors.white38),
+                  decoration: BoxDecoration(color: Colors.white38.withOpacity(0.3)),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
@@ -153,7 +213,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       ),
                       GoogleFacebookLogin(
                         child: Icon(Icons.person, size: 55, color: Colors.lightBlueAccent,),
-                        label: 'Google',
+                        label: 'Guest',
                         onPressed: (){},
                       ),
                     ],
@@ -164,6 +224,32 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ),
         ),
       ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}
+
+class AnimatedLogo extends StatelessWidget {
+  const AnimatedLogo({
+    super.key,
+    required AnimationController controller,
+  }) : _controller = controller;
+
+  final AnimationController _controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+        animation: _controller.view,
+        builder: (context, child) {
+          return Transform.rotate(angle: _controller.value * 2 * pi, child: child,);
+        },
+        child:const  Image(image: AssetImage('images/inapp/logo.jpg')),
     );
   }
 }
