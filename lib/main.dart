@@ -14,9 +14,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: WelcomeScreen(),
+      initialRoute: '/welcome_screen',
+      routes: {
+        '/welcome_screen': (context) => const WelcomeScreen(),
+        '/customer_home_screen': (context) => const CustomerHomeScreen(),
+        '/supplier_home_screen': (context) => const SupplierHomeScreen(),
+      },
     );
   }
 }

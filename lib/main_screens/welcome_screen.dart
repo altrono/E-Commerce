@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:zando/main_screens/supplier_home_screen.dart';
 import '../widgets/yellow_button.dart';
 
 const textColors = [
@@ -86,10 +87,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                       isRepeatingAnimation: true,
                       animatedTexts: [
                         RotateAnimatedText(
-                          'SHOP',
+                          'ZANDO  STORE',
                         ),
                         RotateAnimatedText(
-                          'FAST',
+                          'SHOP',
                         ),
                         RotateAnimatedText(
                           'BUY',
@@ -137,7 +138,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                             AnimatedLogo(controller: _controller),
                             YellowButton(
                               width: 0.25,
-                              onPressed: (){},
+                              onPressed: (){
+                                Navigator.pushReplacementNamed(
+                                    context,
+                                    '/supplier_home_screen',
+                                );
+                              },
                               label: 'Log In',
                             ),
                             Padding(
@@ -175,14 +181,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                           padding: const EdgeInsets.only(left: 8),
                           child: YellowButton(
                             width: 0.25,
-                            onPressed: (){},
-                            label: 'Sign Up',
+                            onPressed: (){
+                              Navigator.pushReplacementNamed(context, '/customer_home_screen');
+                            },
+                            label: 'Log In',
                           ),
                         ),
                         YellowButton(
                           width: 0.25,
                           onPressed: (){},
-                          label: 'Log In',
+                          label: 'Sign Up',
                         ),
                         AnimatedLogo(controller: _controller),
                       ],
