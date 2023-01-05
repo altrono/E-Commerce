@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:zando/customer_screens/customer_orders.dart';
+import 'package:zando/customer_screens/wishlist.dart';
+import 'package:zando/main_screens/cart.dart';
+import 'package:zando/widgets/appbar_widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -114,7 +118,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen(
+                                  back: AppBarBackButton(),
+                                )));
+                              },
                             ),
                           ),
                           Container(
@@ -136,7 +144,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomerOrders()));
+                              },
                             ),
                           ),
                           Container(
@@ -162,7 +172,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                 ),
                               ),
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => const WishlistScreen()));
+                              },
                             ),
                           ),
                         ],
