@@ -189,7 +189,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                         ),
                         YellowButton(
                           width: 0.25,
-                          onPressed: (){},
+                          onPressed: (){
+                            Navigator.pushReplacementNamed(context, '/customer_signup');
+                          },
                           label: 'Sign Up',
                         ),
                         AnimatedLogo(controller: _controller),

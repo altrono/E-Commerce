@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:zando/auth/customer_signup.dart';
 import 'package:zando/main_screens/supplier_home_screen.dart';
 import 'package:zando/main_screens/welcome_screen.dart';
 
@@ -21,6 +22,7 @@ class MyApp extends StatelessWidget {
         '/welcome_screen': (context) => const WelcomeScreen(),
         '/customer_home_screen': (context) => const CustomerHomeScreen(),
         '/supplier_home_screen': (context) => const SupplierHomeScreen(),
+        '/customer_signup': (context) => const CustomerRegisiterScreen(),
       },
     );
   }
