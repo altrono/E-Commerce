@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/snackbar.dart';
 
@@ -22,6 +24,48 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
 
   bool passwordVisible = false;
 
+  final ImagePicker _picker = ImagePicker();
+
+  XFile? _imageFile;
+  dynamic _pickedImageError;
+
+  void _pickImageFromCamera() async {
+    try {
+      final pickedImage = await _picker.pickImage(
+        source: ImageSource.camera,
+        maxWidth: 300,
+        maxHeight: 300,
+        imageQuality: 95,);
+      setState(() {
+        _imageFile = pickedImage;
+      });
+    } catch(e) {
+      setState(() {
+        _pickedImageError = e;
+      });
+      print(_pickedImageError);
+      print('Bambala noella');
+    }
+  }
+
+  void _pickImageFromGallery() async {
+    try {
+      final pickedImage = await _picker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: 300,
+        maxHeight: 300,
+        imageQuality: 95,);
+      setState(() {
+        _imageFile = pickedImage;
+      });
+    } catch(e) {
+      setState(() {
+        _pickedImageError = e;
+      });
+      print(_pickedImageError);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +87,13 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                       const AuthHeaderLabel(headerLabel: 'Sign Up',),
                       Row(
                         children: [
-                          const Padding(
+                          Padding(
                             padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
-                            child: CircleAvatar(radius: 60, backgroundColor: Colors.purpleAccent,),
+                            child: CircleAvatar(
+                              radius: 60, 
+                              backgroundColor: Colors.purpleAccent,
+                              backgroundImage: _imageFile == null ? null : FileImage(File(_imageFile!.path)),
+                            ),
                           ),
                           Column(
                             children: [
@@ -62,7 +110,9 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                                     Icons.camera_alt,
                                     color: Colors.white,
                                   ),
-                                  onPressed: (){},
+                                  onPressed: (){
+                                    _pickImageFromCamera();
+                                  },
                                 ),
                               ),
                               const SizedBox(height: 6,),
@@ -79,7 +129,9 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                                     Icons.photo,
                                     color: Colors.white,
                                   ),
-                                  onPressed: (){},
+                                  onPressed: (){
+                                    _pickImageFromGallery();
+                                  },
                                 ),
                               )
                             ],
@@ -165,7 +217,14 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                       AuthMainButton(
                         onPressed: (){
                           if (_formKey.currentState!.validate()) {
-                            print('All good');
+                            if (_imageFile != null) {
+                              _formKey.currentState!.reset();
+                              setState(() {
+                                _imageFile = null;
+                              });
+                            } else {
+                              MyMessageHandler.showSnackBar(_scaffoldKey, "please pick image first");
+                            }
                           } else {
                             MyMessageHandler.showSnackBar(_scaffoldKey, "please fill all fields");
                           }
