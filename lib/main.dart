@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         '/welcome_screen': (context) => const WelcomeScreen(),
         '/customer_home_screen': (context) => const CustomerHomeScreen(),
         '/supplier_home_screen': (context) => const SupplierHomeScreen(),
-        '/customer_signup': (context) => const CustomerRegisiterScreen(),
+        '/customer_signup': (context) => const CustomerRegisterScreen(),
       },
     );
   }

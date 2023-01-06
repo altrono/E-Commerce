@@ -2,16 +2,23 @@ import 'package:flutter/material.dart';
 
 import '../widgets/auth_widgets.dart';
 
-class CustomerRegisiterScreen extends StatefulWidget {
-  const CustomerRegisiterScreen({Key? key}) : super(key: key);
+
+class CustomerRegisterScreen extends StatefulWidget {
+  const CustomerRegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<CustomerRegisiterScreen> createState() => _CustomerRegisiterScreenState();
+  State<CustomerRegisterScreen> createState() => _CustomerRegisterScreenState();
 }
 
-class _CustomerRegisiterScreenState extends State<CustomerRegisiterScreen> {
+class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
+
+  late String name;
+  late String email;
+  late String password;
+
   final  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool passwordVisible = false;
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,6 +85,9 @@ class _CustomerRegisiterScreenState extends State<CustomerRegisiterScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10,),
                       child: TextFormField(
+                          onChanged: (value) {
+                            name = value;
+                          },
                           validator: (val) {
                             if (val!.isEmpty) {
                               return 'please enter your full name';
@@ -88,11 +98,15 @@ class _CustomerRegisiterScreenState extends State<CustomerRegisiterScreen> {
                             labelText: 'Full Name',
                             hintText: 'Enter your full name'
                           ),
+
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10,),
                       child: TextFormField(
+                          onChanged: (value){
+                            email = value;
+                          },
                           validator: (val) {
                             if (val!.isEmpty) {
                               return 'please enter your email address';
@@ -113,6 +127,9 @@ class _CustomerRegisiterScreenState extends State<CustomerRegisiterScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10,),
                       child: TextFormField(
+                          onChanged: (value){
+                            password = value;
+                          },
                           validator: (val) {
                             if (val!.isEmpty) {
                               return 'please enter your password';
@@ -143,9 +160,9 @@ class _CustomerRegisiterScreenState extends State<CustomerRegisiterScreen> {
                     AuthMainButton(
                       onPressed: (){
                         if (_formKey.currentState!.validate()) {
-                          print('Tshilengi');
+                          print('All good');
                         } else {
-
+                          print('Not Valid');
                         }
                       },
                       mainButtonLabel: 'Sign Up',
