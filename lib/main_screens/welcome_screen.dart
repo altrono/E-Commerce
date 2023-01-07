@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zando/main_screens/supplier_home_screen.dart';
 import '../widgets/yellow_button.dart';
@@ -29,6 +30,8 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
+
+  bool processing = false;
 
   @override
   void initState() {
@@ -216,15 +219,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                         onPressed: (){},
                       ),
                       GoogleFacebookLogin(
-                        child: Image(
-                            image: AssetImage('images/inapp/facebook.jpg')),
                         label: 'Facebook',
                         onPressed: (){},
+                        child:const  Image(
+                            image: AssetImage('images/inapp/facebook.jpg')),
                       ),
-                      GoogleFacebookLogin(
-                        child: Icon(Icons.person, size: 55, color: Colors.lightBlueAccent,),
+                      processing == true ? const CircularProgressIndicator() : GoogleFacebookLogin(
                         label: 'Guest',
-                        onPressed: (){},
+                        onPressed: () async {
+                          setState(() {
+                            processing =true;
+                          });
+                          await FirebaseAuth.instance.signInAnonymously();
+                          Navigator.pushReplacementNamed(context, '/customer_home_screen');
+                        },
+                        child:const Icon(Icons.person, size: 55, color: Colors.lightBlueAccent,),
                       ),
                     ],
                   ),
