@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../widgets/auth_widgets.dart';
@@ -66,6 +67,38 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
     }
   }
 
+  void signUp() async {
+    
+    if (_formKey.currentState!.validate()) {
+      if (_imageFile != null) {
+        try {
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+          _formKey.currentState!.reset();
+          setState(() {
+            _imageFile = null;
+          });
+          Navigator.pushReplacementNamed(context, '/customer_home_screen');
+        } on FirebaseAuthException catch (e) {
+          if (e.code == 'weak-password') {
+            MyMessageHandler.showSnackBar(
+                _scaffoldKey, "The password provided is too weak");
+          } else if (e.code == 'email-already-in-use') {
+            MyMessageHandler.showSnackBar(
+                _scaffoldKey, "This email is already in use");
+          }
+        } catch(e) {
+          print(e);
+        }
+
+      } else {
+        MyMessageHandler.showSnackBar(
+            _scaffoldKey, "please pick image first");
+      }
+    } else {
+      MyMessageHandler.showSnackBar(
+          _scaffoldKey, "please fill all fields");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,18 +249,8 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
 
                       AuthMainButton(
                         onPressed: (){
-                          if (_formKey.currentState!.validate()) {
-                            if (_imageFile != null) {
-                              _formKey.currentState!.reset();
-                              setState(() {
-                                _imageFile = null;
-                              });
-                            } else {
-                              MyMessageHandler.showSnackBar(_scaffoldKey, "please pick image first");
-                            }
-                          } else {
-                            MyMessageHandler.showSnackBar(_scaffoldKey, "please fill all fields");
-                          }
+
+                          signUp();
                         },
                         mainButtonLabel: 'Sign Up',
                       )
