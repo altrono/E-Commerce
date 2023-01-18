@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,19 +8,19 @@ import '../widgets/snackbar.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 
-class CustomerRegisterScreen extends StatefulWidget {
-  const CustomerRegisterScreen({Key? key}) : super(key: key);
+class SupplierRegisterScreen extends StatefulWidget {
+  const SupplierRegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<CustomerRegisterScreen> createState() => _CustomerRegisterScreenState();
+  State<SupplierRegisterScreen> createState() => _SupplierRegisterScreenState();
 }
 
-class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
+class _SupplierRegisterScreenState extends State<SupplierRegisterScreen> {
 
-  late String name;
+  late String storeName;
   late String email;
   late String password;
-  late String profileImage;
+  late String storeLogo;
   late String _uid;
   bool processing = false;
 
@@ -34,7 +33,7 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
 
   XFile? _imageFile;
   dynamic _pickedImageError;
-  CollectionReference customers = FirebaseFirestore.instance.collection('customers');
+  CollectionReference suppliers = FirebaseFirestore.instance.collection('suppliers');
 
   void _pickImageFromCamera() async {
     try {
@@ -83,29 +82,26 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
         try {
           await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
 
-          firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.ref('customer-images/$email.jpg');
-          print('We are about to call storage');
+          firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.ref('supp-images/$email.jpg');
+
           await ref.putFile(File(_imageFile!.path));
           _uid = FirebaseAuth.instance.currentUser!.uid;
-          
-          profileImage = await ref.getDownloadURL();
-          print('We are about to call Cloud store');
-          await customers.doc(_uid).set({
-            'name': name,
+
+          storeLogo = await ref.getDownloadURL();
+
+          await suppliers.doc(_uid).set({
+            'storename': storeName,
             'email': email,
-            'profileimage': profileImage,
+            'storelogo': storeLogo,
             'phone': '',
-            'address': '',
-            'cid': _uid
+            'sid': _uid,
+            'coverimage': ''
           });
-        
           _formKey.currentState!.reset();
           setState(() {
             _imageFile = null;
           });
-
-          Navigator.pushReplacementNamed(context, '/customer_login');
-
+          Navigator.pushReplacementNamed(context, '/supplier_login');
 
 
         } on FirebaseAuthException catch (e) {
@@ -166,7 +162,7 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 40.0),
                             child: CircleAvatar(
-                              radius: 60, 
+                              radius: 60,
                               backgroundColor: Colors.purpleAccent,
                               backgroundImage: _imageFile == null ? null : FileImage(File(_imageFile!.path)),
                             ),
@@ -218,59 +214,59 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10,),
                         child: TextFormField(
-                            onChanged: (value) {
-                              name = value;
-                            },
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'please enter your full name';
-                              }
-                              return null;
-                            },
-                            decoration: textFormDecoration.copyWith(
+                          onChanged: (value) {
+                            storeName = value;
+                          },
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return 'please enter your full name';
+                            }
+                            return null;
+                          },
+                          decoration: textFormDecoration.copyWith(
                               labelText: 'Full Name',
                               hintText: 'Enter your full name'
-                            ),
+                          ),
 
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10,),
                         child: TextFormField(
-                            onChanged: (value){
-                              email = value;
-                            },
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'please enter your email address';
-                              } else if (val.isValidEmail() == false){
-                                return 'invalid email';
-                              } else if (val.isValidEmail() == true) {
-                                return null;
-                              }
+                          onChanged: (value){
+                            email = value;
+                          },
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return 'please enter your email address';
+                            } else if (val.isValidEmail() == false){
+                              return 'invalid email';
+                            } else if (val.isValidEmail() == true) {
                               return null;
-                            },
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: textFormDecoration.copyWith(
-                                labelText: 'Email Address',
-                                hintText: 'Enter your email Address'
-                            ),
+                            }
+                            return null;
+                          },
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: textFormDecoration.copyWith(
+                              labelText: 'Email Address',
+                              hintText: 'Enter your email Address'
+                          ),
                         ),
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 10,),
                         child: TextFormField(
-                            onChanged: (value){
-                              password = value;
-                            },
-                            validator: (val) {
-                              if (val!.isEmpty) {
-                                return 'please enter your password';
-                              }
-                              return null;
-                            },
-                            obscureText: passwordVisible ? false : true,
-                            decoration: textFormDecoration.copyWith(
+                          onChanged: (value){
+                            password = value;
+                          },
+                          validator: (val) {
+                            if (val!.isEmpty) {
+                              return 'please enter your password';
+                            }
+                            return null;
+                          },
+                          obscureText: passwordVisible ? false : true,
+                          decoration: textFormDecoration.copyWith(
                               suffixIcon: IconButton(
                                   onPressed: (){
                                     setState(() {
@@ -280,7 +276,7 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                                   icon: Icon(passwordVisible ? Icons.visibility : Icons.visibility_off, color: Colors.purple,)),
                               labelText: 'Password',
                               hintText: 'Enter your password'
-                            ),
+                          ),
                         ),
                       ),
 
@@ -288,7 +284,7 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                         actionLabel: 'Log In',
                         haveAccount: 'Already have an account? ',
                         onpressed: (){
-                          Navigator.pushReplacementNamed(context, '/customer_login');
+                          Navigator.pushReplacementNamed(context, '/supplier_login');
                         },
                       ),
 

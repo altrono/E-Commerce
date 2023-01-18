@@ -144,7 +144,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                               onPressed: (){
                                 Navigator.pushReplacementNamed(
                                     context,
-                                    '/supplier_home_screen',
+                                    '/supplier_login',
                                 );
                               },
                               label: 'Log In',
@@ -153,7 +153,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                               padding: const EdgeInsets.only(right: 8),
                               child: YellowButton(
                                 width: 0.25,
-                                onPressed: (){},
+                                onPressed: (){
+                                  Navigator.pushReplacementNamed(
+                                    context,
+                                    '/supplier_signup',
+                                  );
+                                },
                                 label: 'Sign Up',
                               ),
                             )

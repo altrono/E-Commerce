@@ -80,7 +80,12 @@ class AuthHeaderLabel extends StatelessWidget {
             style:const TextStyle(fontSize: 40, fontWeight: FontWeight.bold),
           ),
           IconButton(
-            onPressed: (){},
+            onPressed: (){
+              Navigator.pushReplacementNamed(
+                context,
+                '/welcome_screen',
+              );
+            },
             icon: const Icon(Icons.home_work, size: 40,),
           ),
         ],
