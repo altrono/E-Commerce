@@ -1,9 +1,8 @@
 import 'dart:math';
-
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:zando/main_screens/supplier_home_screen.dart';
 import '../widgets/yellow_button.dart';
 
 const textColors = [
@@ -32,6 +31,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
   late AnimationController _controller;
 
   bool processing = false;
+
+  CollectionReference customers = FirebaseFirestore.instance.collection('customers');
+
+  late String _uid;
 
   @override
   void initState() {
@@ -235,7 +238,20 @@ class _WelcomeScreenState extends State<WelcomeScreen> with SingleTickerProvider
                           setState(() {
                             processing =true;
                           });
-                          await FirebaseAuth.instance.signInAnonymously();
+                          await FirebaseAuth.instance.signInAnonymously().whenComplete(() async {
+                            _uid = FirebaseAuth.instance.currentUser!.uid;
+                            await customers.doc(_uid).set({
+                              'name': '',
+                              'email': '',
+                              'profileimage': '',
+                              'phone': '',
+                              'address': '',
+                              'cid': _uid,
+
+                              });
+                          });
+
+
                           Navigator.pushReplacementNamed(context, '/customer_home_screen');
                         },
                         child:const Icon(Icons.person, size: 55, color: Colors.lightBlueAccent,),

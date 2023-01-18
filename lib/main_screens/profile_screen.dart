@@ -83,6 +83,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   padding: const EdgeInsets.only(top: 25.0, left: 30.0),
                                   child: Row(
                                     children: [
+                                      data['profileimage'] == '' ?
+                                      CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage: AssetImage('images/inapp/guest.jpg'),
+                                      ) :
                                       CircleAvatar(
                                         radius: 50,
                                         backgroundImage: NetworkImage(data['profileimage']),
@@ -90,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       Padding(
                                         padding: const EdgeInsets.only(left: 25.0),
                                         child: Text(
-                                          data['name'].toUpperCase(),
+                                          data['name'] == '' ? 'guest'.toUpperCase() : data['name'].toUpperCase(),
                                           style: const TextStyle(
                                             fontSize: 24,
                                             fontWeight: FontWeight.w600,
@@ -225,7 +230,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             title: 'Email Address',
                                             onPressed: (){},
                                             icon: Icons.email,
-                                            subTitle: data['email'],
+                                            subTitle: data['email'] == '' ? "example@gmail.com" : data['email'],
                                           ),
                                           const Padding(
                                             padding: const EdgeInsets.symmetric(horizontal: 40.0),
@@ -236,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           RepeatedListTile(
                                               title: 'Phone No.',
-                                              subTitle: data['phone'],
+                                              subTitle: data['phone'] == '' ? 'example: +27111' : data['phone'],
                                               icon: Icons.phone),
 
                                           const Padding(
@@ -248,7 +253,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                           RepeatedListTile(
                                               title: 'Address',
-                                              subTitle: data['address'],
+                                              subTitle: data['address'] == '' ? 'example: Rosebank CTP SA' : data['address'],
                                               icon: Icons.location_pin),
                                         ],
                                       ),
