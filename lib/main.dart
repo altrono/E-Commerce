@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zando/auth/customer_login.dart';
 import 'package:zando/auth/customer_signup.dart';
 import 'package:zando/main_screens/supplier_home_screen.dart';
 import 'package:zando/main_screens/welcome_screen.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         '/customer_home_screen': (context) => const CustomerHomeScreen(),
         '/supplier_home_screen': (context) => const SupplierHomeScreen(),
         '/customer_signup': (context) => const CustomerRegisterScreen(),
+        '/customer_login': (context) => const CustomerLoginScreen(),
       },
     );
   }

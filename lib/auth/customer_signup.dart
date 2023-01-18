@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import '../widgets/auth_widgets.dart';
 import '../widgets/snackbar.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 
 class CustomerRegisterScreen extends StatefulWidget {
@@ -19,6 +21,9 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
   late String name;
   late String email;
   late String password;
+  late String profileImage;
+  late String _uid;
+  bool processing = false;
 
   final  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final  GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
@@ -29,6 +34,7 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
 
   XFile? _imageFile;
   dynamic _pickedImageError;
+  CollectionReference customers = FirebaseFirestore.instance.collection('customers');
 
   void _pickImageFromCamera() async {
     try {
@@ -45,7 +51,7 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
         _pickedImageError = e;
       });
       print(_pickedImageError);
-      print('Bambala noella');
+
     }
   }
 
@@ -68,17 +74,44 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
   }
 
   void signUp() async {
-    
+    setState(() {
+      processing = true;
+    });
+
     if (_formKey.currentState!.validate()) {
       if (_imageFile != null) {
         try {
           await FirebaseAuth.instance.createUserWithEmailAndPassword(email: email, password: password);
+
+          firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance.ref('customer-images/$email.jpg');
+          print('We are about to call storage');
+          await ref.putFile(File(_imageFile!.path));
+          _uid = FirebaseAuth.instance.currentUser!.uid;
+          
+          profileImage = await ref.getDownloadURL();
+          print('We are about to call Cloud store');
+          await customers.doc(_uid).set({
+            'name': name,
+            'email': email,
+            'profileimage': profileImage,
+            'phone': '',
+            'address': '',
+            'cid': _uid
+          });
+          print('We are about to call Reset');
           _formKey.currentState!.reset();
           setState(() {
             _imageFile = null;
           });
+          print('We are about to call Nav');
           Navigator.pushReplacementNamed(context, '/customer_home_screen');
+
+          print('Libolo nde elengi');
+
         } on FirebaseAuthException catch (e) {
+          setState(() {
+            processing = false;
+          });
           if (e.code == 'weak-password') {
             MyMessageHandler.showSnackBar(
                 _scaffoldKey, "The password provided is too weak");
@@ -87,16 +120,26 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                 _scaffoldKey, "This email is already in use");
           }
         } catch(e) {
+          setState(() {
+            processing = false;
+          });
           print(e);
         }
 
       } else {
+        setState(() {
+          processing = false;
+        });
         MyMessageHandler.showSnackBar(
             _scaffoldKey, "please pick image first");
       }
     } else {
+      setState(() {
+        processing = false;
+      });
       MyMessageHandler.showSnackBar(
           _scaffoldKey, "please fill all fields");
+
     }
   }
 
@@ -244,9 +287,13 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                       HaveAccount(
                         actionLabel: 'Log In',
                         haveAccount: 'Already have an account? ',
-                        onpressed: (){},
+                        onpressed: (){
+                          Navigator.pushReplacementNamed(context, '/customer_login');
+                        },
                       ),
 
+                      processing == true ?
+                      const CircularProgressIndicator() :
                       AuthMainButton(
                         onPressed: (){
 
