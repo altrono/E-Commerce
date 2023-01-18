@@ -293,7 +293,7 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                       ),
 
                       processing == true ?
-                      const CircularProgressIndicator() :
+                      const CircularProgressIndicator(color: Colors.purple,) :
                       AuthMainButton(
                         onPressed: (){
 

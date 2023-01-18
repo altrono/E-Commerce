@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,292 +10,313 @@ import 'package:zando/widgets/appbar_widgets.dart';
 import '../widgets/my_alert_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  final String documentId;
+  const ProfileScreen({Key? key, required this.documentId}) : super(key: key);
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  CollectionReference customers = FirebaseFirestore.instance.collection('customers');
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey.shade300,
-      body: Stack(
-        children: [
-          Container(
-            height: 230,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                  colors: [Colors.yellow, Colors.brown],
-              ),
-            ),
-          ),
+    return FutureBuilder<DocumentSnapshot>(
+        future: customers.doc(widget.documentId).get(),
+        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
-          CustomScrollView(
-            slivers: [
-              SliverAppBar(
-                pinned: true,
-                centerTitle: true,
-                elevation: 0,
-                backgroundColor: Colors.white,
-                expandedHeight: 140,
-                flexibleSpace: LayoutBuilder(
-                  builder: (context, constraints){
-                    return FlexibleSpaceBar(
-                      title: AnimatedOpacity(
-                        duration: const Duration(milliseconds: 200),
-                        opacity: constraints.biggest.height <= 120 ? 1 : 0,
-                        child: const Text(
-                          'Account',
-                          style: TextStyle(
-                              color: Colors.black
-                          ),
-                        ),
-                      ),
-                      background: Container(
-                        decoration: const BoxDecoration(
-                            gradient: LinearGradient(
-                              colors: [
-                                Colors.yellow,
-                                Colors.brown,
-                              ],
-                            )
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 25.0, left: 30.0),
-                          child: Row(
-                            children: [
-                              const CircleAvatar(
-                                radius: 50,
-                                backgroundImage: AssetImage('images/inapp/guest.jpg'),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 25.0),
-                                child: Text(
-                                  'guest'.toUpperCase(),
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SliverToBoxAdapter(
-                child: Column(
-                  children: [
-                    Container(
-                      height: 80,
-                      width: MediaQuery.of(context).size.width * 0.9,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(50)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Container(
-                            decoration: const BoxDecoration(
-                                color: Colors.black54,
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(50),
-                                  bottomLeft: Radius.circular(50),
-                                )
-                            ),
-                            child: TextButton(
-                              child: SizedBox(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * 0.2,
-                                child: const Center(
-                                  child: Text(
-                                    'Cart',
-                                    style: TextStyle(
-                                      color: Colors.yellow,
-                                      fontSize: 20,
+          if (snapshot.hasError) {
+            return const Text("Something went wrong");
+          }
 
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen(
-                                  back: AppBarBackButton(),
-                                )));
-                              },
-                            ),
-                          ),
-                          Container(
-                            decoration: const BoxDecoration(
-                              color: Colors.yellow,
-                            ),
-                            child: TextButton(
-                              child: SizedBox(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * 0.2,
-                                child: const Center(
-                                  child: Text(
-                                    'Orders',
-                                    style: TextStyle(
-                                      color: Colors.black54,
-                                      fontSize: 20,
+          if (snapshot.hasData && !snapshot.data!.exists) {
+            return const Text("Document does not exist");
+          }
 
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomerOrders()));
-                              },
-                            ),
-                          ),
-                          Container(
-                            decoration: const BoxDecoration(
-                                color: Colors.black54,
-                                borderRadius: BorderRadius.only(
-                                  topRight: Radius.circular(50),
-                                  bottomRight: Radius.circular(50),
-                                )
-                            ),
-                            child: TextButton(
-                              child: SizedBox(
-                                height: 40,
-                                width: MediaQuery.of(context).size.width * 0.2,
-                                child: const Center(
-                                  child: Text(
-                                    'Wishlist',
-                                    style: TextStyle(
-                                      color: Colors.yellow,
-                                      fontSize: 20,
-
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              onPressed: () {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => const WishlistScreen()));
-                              },
-                            ),
-                          ),
-                        ],
+          if (snapshot.connectionState == ConnectionState.done) {
+            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+            return Scaffold(
+              backgroundColor: Colors.grey.shade300,
+              body: Stack(
+                children: [
+                  Container(
+                    height: 230,
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [Colors.yellow, Colors.brown],
                       ),
                     ),
-                    Container(
-                      color: Colors.grey.shade300,
-                      child: Column(
-                        children: [
-                          const SizedBox(
-                            height: 150,
-                            child: Image(image: AssetImage('images/inapp/logo.jpg')),
-                          ),
-                          const ProfileHeaderLabel(headerLabel: '  Account Info  '),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              height: 260,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16.00),
-                              ),
-                              child: Column(
-                                children:  [
-                                  RepeatedListTile(
-                                    title: 'Email Address',
-                                    onPressed: (){},
-                                    icon: Icons.email,
-                                    subTitle: 'hbotem16@gmail.com',
-                                  ),
-                                  const Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                                    child: Divider(
-                                      color: Colors.yellow,
-                                      thickness: 1,
-                                    ),
-                                  ),
-                                  const RepeatedListTile(
-                                      title: 'Phone No.',
-                                      subTitle: '+27 82 222 222',
-                                      icon: Icons.phone),
+                  ),
 
-                                  const Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                                    child: Divider(
-                                      color: Colors.yellow,
-                                      thickness: 1,
+                  CustomScrollView(
+                    slivers: [
+                      SliverAppBar(
+                        pinned: true,
+                        centerTitle: true,
+                        elevation: 0,
+                        backgroundColor: Colors.white,
+                        expandedHeight: 140,
+                        flexibleSpace: LayoutBuilder(
+                          builder: (context, constraints){
+                            return FlexibleSpaceBar(
+                              title: AnimatedOpacity(
+                                duration: const Duration(milliseconds: 200),
+                                opacity: constraints.biggest.height <= 120 ? 1 : 0,
+                                child: const Text(
+                                  'Account',
+                                  style: TextStyle(
+                                      color: Colors.black
+                                  ),
+                                ),
+                              ),
+                              background: Container(
+                                decoration: const BoxDecoration(
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.yellow,
+                                        Colors.brown,
+                                      ],
+                                    )
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.only(top: 25.0, left: 30.0),
+                                  child: Row(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage: NetworkImage(data['profileimage']),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 25.0),
+                                        child: Text(
+                                          data['name'].toUpperCase(),
+                                          style: const TextStyle(
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SliverToBoxAdapter(
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 80,
+                              width: MediaQuery.of(context).size.width * 0.9,
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(50)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                        color: Colors.black54,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(50),
+                                          bottomLeft: Radius.circular(50),
+                                        )
+                                    ),
+                                    child: TextButton(
+                                      child: SizedBox(
+                                        height: 40,
+                                        width: MediaQuery.of(context).size.width * 0.2,
+                                        child: const Center(
+                                          child: Text(
+                                            'Cart',
+                                            style: TextStyle(
+                                              color: Colors.yellow,
+                                              fontSize: 20,
+
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CartScreen(
+                                          back: AppBarBackButton(),
+                                        )));
+                                      },
                                     ),
                                   ),
-                                  const RepeatedListTile(
-                                      title: 'Address',
-                                      subTitle: '22 Flora Village Hamburg Gauteng SA',
-                                      icon: Icons.location_pin),
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.yellow,
+                                    ),
+                                    child: TextButton(
+                                      child: SizedBox(
+                                        height: 40,
+                                        width: MediaQuery.of(context).size.width * 0.2,
+                                        child: const Center(
+                                          child: Text(
+                                            'Orders',
+                                            style: TextStyle(
+                                              color: Colors.black54,
+                                              fontSize: 20,
+
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => const CustomerOrders()));
+                                      },
+                                    ),
+                                  ),
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                        color: Colors.black54,
+                                        borderRadius: BorderRadius.only(
+                                          topRight: Radius.circular(50),
+                                          bottomRight: Radius.circular(50),
+                                        )
+                                    ),
+                                    child: TextButton(
+                                      child: SizedBox(
+                                        height: 40,
+                                        width: MediaQuery.of(context).size.width * 0.2,
+                                        child: const Center(
+                                          child: Text(
+                                            'Wishlist',
+                                            style: TextStyle(
+                                              color: Colors.yellow,
+                                              fontSize: 20,
+
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => const WishlistScreen()));
+                                      },
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
-                          ),
-                          const ProfileHeaderLabel(headerLabel: '  Account Settings  '),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Container(
-                              height: 260,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16.00),
-                              ),
+                            Container(
+                              color: Colors.grey.shade300,
                               child: Column(
                                 children: [
-                                  const RepeatedListTile(
-                                    title: 'Edit Profile',
-                                    subTitle: '',
-                                    icon: Icons.edit,
+                                  const SizedBox(
+                                    height: 150,
+                                    child: Image(image: AssetImage('images/inapp/logo.jpg')),
                                   ),
-                                  const YellowDivider(),
-                                  RepeatedListTile(
-                                    title: 'Change Password.',
-                                    icon: Icons.lock,
-                                    onPressed: (){},
+                                  const ProfileHeaderLabel(headerLabel: '  Account Info  '),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Container(
+                                      height: 260,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(16.00),
+                                      ),
+                                      child: Column(
+                                        children:  [
+                                          RepeatedListTile(
+                                            title: 'Email Address',
+                                            onPressed: (){},
+                                            icon: Icons.email,
+                                            subTitle: data['email'],
+                                          ),
+                                          const Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                                            child: Divider(
+                                              color: Colors.yellow,
+                                              thickness: 1,
+                                            ),
+                                          ),
+                                          RepeatedListTile(
+                                              title: 'Phone No.',
+                                              subTitle: data['phone'],
+                                              icon: Icons.phone),
+
+                                          const Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                                            child: Divider(
+                                              color: Colors.yellow,
+                                              thickness: 1,
+                                            ),
+                                          ),
+                                          RepeatedListTile(
+                                              title: 'Address',
+                                              subTitle: data['address'],
+                                              icon: Icons.location_pin),
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                  const YellowDivider(),
-                                  RepeatedListTile(
-                                    title: 'Log Out',
-                                    icon: Icons.logout,
-                                    onPressed: () async {
-                                      MyAlertDialog.showMyDialog(
-                                          context: context,
-                                          title: 'Log Out',
-                                          content: 'Are you sure you want to log out?',
-                                          tabNo: (){
-                                            Navigator.pop(context);
-                                          },
-                                          tabYes: () async {
-                                            await FirebaseAuth.instance.signOut();
-                                            Navigator.pop(context);
-                                            Navigator.pushReplacementNamed(context, '/welcome_screen');
+                                  const ProfileHeaderLabel(headerLabel: '  Account Settings  '),
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Container(
+                                      height: 260,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(16.00),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          const RepeatedListTile(
+                                            title: 'Edit Profile',
+                                            subTitle: '',
+                                            icon: Icons.edit,
+                                          ),
+                                          const YellowDivider(),
+                                          RepeatedListTile(
+                                            title: 'Change Password.',
+                                            icon: Icons.lock,
+                                            onPressed: (){},
+                                          ),
+                                          const YellowDivider(),
+                                          RepeatedListTile(
+                                            title: 'Log Out',
+                                            icon: Icons.logout,
+                                            onPressed: () async {
+                                              MyAlertDialog.showMyDialog(
+                                                  context: context,
+                                                  title: 'Log Out',
+                                                  content: 'Are you sure you want to log out?',
+                                                  tabNo: (){
+                                                    Navigator.pop(context);
+                                                  },
+                                                  tabYes: () async {
+                                                    await FirebaseAuth.instance.signOut();
+                                                    Navigator.pop(context);
+                                                    Navigator.pushReplacementNamed(context, '/welcome_screen');
 
 
-                                          }
-                                      );
-                                    },
+                                                  }
+                                              );
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            );
+          }
+          return const Center(child: CircularProgressIndicator(color: Colors.purple,),);
+    });
+
   }
 }
 

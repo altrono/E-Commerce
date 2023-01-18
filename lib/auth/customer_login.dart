@@ -156,7 +156,7 @@ class _CustomerLoginScreenState extends State<CustomerLoginScreen> {
                       ),
 
                       processing == true ?
-                      const Center(child: CircularProgressIndicator()) :
+                      const Center(child: CircularProgressIndicator(color: Colors.purple,)) :
                       AuthMainButton(
                         onPressed: (){
 
