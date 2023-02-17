@@ -99,7 +99,7 @@ class DashboardScreen extends StatelessWidget {
                     Text(
                       labels[index].toUpperCase(),
                       style: const TextStyle(
-                        fontSize: 24,
+                        fontSize: 22,
                         color: Colors.yellowAccent,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 2,

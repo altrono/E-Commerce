@@ -3,6 +3,7 @@ import 'package:zando/main_screens/category_screen.dart';
 import 'package:zando/main_screens/dashboard_screen.dart';
 import 'package:zando/main_screens/home_screen.dart';
 import 'package:zando/main_screens/stores.dart';
+import 'package:zando/main_screens/upload_product.dart';
 
 class SupplierHomeScreen extends StatefulWidget {
   const SupplierHomeScreen({Key? key}) : super(key: key);
@@ -18,7 +19,7 @@ class _SupplierHomeScreenState extends State<SupplierHomeScreen> {
     CategoryScreen(),
     StoresScreen(),
     DashboardScreen(),
-    Center(child: Text('Upload'),),
+    UploadProductScreen(),
   ];
   @override
   Widget build(BuildContext context) {

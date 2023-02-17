@@ -87,8 +87,8 @@ class SubCategModel extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            height: 70,
-            width: 70,
+            height: 60,
+            width: 60,
             child: Image(
               image: AssetImage(assetName),
             ),
