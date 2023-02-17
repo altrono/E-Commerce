@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:zando/widgets/snackbar.dart';
 
 class UploadProductScreen extends StatefulWidget {
   const UploadProductScreen({Key? key}) : super(key: key);
@@ -8,110 +9,154 @@ class UploadProductScreen extends StatefulWidget {
 }
 
 class _UploadProductScreenState extends State<UploadProductScreen> {
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<ScaffoldMessengerState> _scaffoldKey = GlobalKey<ScaffoldMessengerState>();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          reverse: true,
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+    return ScaffoldMessenger(
+      key: _scaffoldKey,
+      child: Scaffold(
+        body: SafeArea(
+          child: SingleChildScrollView(
+            reverse: true,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    color: Colors.blueGrey.shade100,
-                    height: MediaQuery.of(context).size.width * 0.5,
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    child: const Center(
-                      child: Text(
-                        'You have not \n \n picked images yet !',
-                        style: TextStyle(fontSize: 16),
-                        textAlign: TextAlign.center,
+                  Row(
+                    children: [
+                      Container(
+                        color: Colors.blueGrey.shade100,
+                        height: MediaQuery.of(context).size.width * 0.5,
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: const Center(
+                          child: Text(
+                            'You have not \n \n picked images yet !',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                      height: 30,
+                      child: Divider(color: Colors.yellow, thickness: 1.5,)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.38,
+                      child: TextFormField(
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        validator: (value) {
+                          if(value!.isEmpty) {
+                            return 'please enter price';
+                          } else if (value.isValidPrice() != true) {
+                            return 'invalid price';
+                          }
+                          return null;
+                        },
+                        decoration: textFormDecoration.copyWith(
+                          labelText: 'price',
+                          hintText: 'price R..',
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.45,
+                      child: TextFormField(
+                        validator: (value) {
+                          if(value!.isEmpty) {
+                            return 'please enter Quantity';
+                          } else if (value.isValidQuantity() != true) {
+                            return 'not valid quantity';
+                          }
+                          return null;
+                        },
+                        keyboardType: TextInputType.number,
+                        decoration: textFormDecoration.copyWith(
+                          labelText: 'Quantity',
+                          hintText: 'Add Quantity',
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: TextFormField(
+                        maxLength: 100,
+                        maxLines: 3,
+                        validator: (value) {
+                          if(value!.isEmpty) {
+                            return 'please enter product name';
+                          }
+                          return null;
+                        },
+                        decoration: textFormDecoration.copyWith(
+                          labelText: 'product name',
+                          hintText: 'Enter product name',
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width,
+                      child: TextFormField(
+                        maxLength: 800,
+                        maxLines: 5,
+                        validator: (value) {
+                          if(value!.isEmpty) {
+                            return 'please enter product description';
+                          }
+                          return null;
+                        },
+                        decoration: textFormDecoration.copyWith(
+                          labelText: 'product description',
+                          hintText: 'Enter product description',
+                        ),
                       ),
                     ),
                   ),
                 ],
               ),
-              const SizedBox(
-                  height: 30,
-                  child: Divider(color: Colors.yellow, thickness: 1.5,)),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.38,
-                  child: TextFormField(
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                    decoration: textFormDecoration.copyWith(
-                      labelText: 'price',
-                      hintText: 'price R..',
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.45,
-                  child: TextFormField(
-                    keyboardType: TextInputType.number,
-                    decoration: textFormDecoration.copyWith(
-                      labelText: 'Quantity',
-                      hintText: 'Add Quantity',
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: TextFormField(
-                    maxLength: 100,
-                    maxLines: 3,
-                    decoration: textFormDecoration.copyWith(
-                      labelText: 'product name',
-                      hintText: 'Enter product name',
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width,
-                  child: TextFormField(
-                    maxLength: 800,
-                    maxLines: 5,
-                    decoration: textFormDecoration.copyWith(
-                      labelText: 'product description',
-                      hintText: 'Enter product description',
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 10.0),
-            child: FloatingActionButton(
-                backgroundColor: Colors.yellow,
-                onPressed: (){},
-                child:  const Icon(Icons.photo_library, color: Colors.black,),
             ),
           ),
-          FloatingActionButton(
-              backgroundColor: Colors.yellow,
-              onPressed: (){},
-              child:  const Icon(Icons.upload, color: Colors.black,),
-          ),
-        ],
+        ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 10.0),
+              child: FloatingActionButton(
+                  backgroundColor: Colors.yellow,
+                  onPressed: (){},
+                  child:  const Icon(Icons.photo_library, color: Colors.black,),
+              ),
+            ),
+            FloatingActionButton(
+                backgroundColor: Colors.yellow,
+                onPressed: (){
+                  if(_formKey.currentState!.validate()) {
+                    print('valid');
+                  } else {
+                    MyMessageHandler.showSnackBar(_scaffoldKey, 'please fill all fields');
+                  }
+                },
+                child:  const Icon(Icons.upload, color: Colors.black,),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -133,3 +178,18 @@ var textFormDecoration = InputDecoration(
     borderRadius: BorderRadius.circular(10),
   ),
 );
+
+extension QuantityValidator on String {
+  bool isValidQuantity (){
+    return RegExp(r'^[1-9][0-9]*$').hasMatch(this);
+  }
+}
+
+extension PriceValidator on String {
+  bool isValidPrice (){
+    return RegExp(r'^((([1-9][0-9]*[\.]*)||([0][\.]*))([0-9]{1,2}))$')
+        .hasMatch(this);
+  }
+}
+
+
