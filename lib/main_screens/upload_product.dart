@@ -81,29 +81,17 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                 children: [
                   Row(
                     children: [
-                      Stack(
-                        children: [
-                          Container(
-                          color: Colors.blueGrey.shade100,
-                          height: MediaQuery.of(context).size.width * 0.5,
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          child: imagesFileList != null ? previewImages() : const Center(
-                            child: Text(
-                              'You have not \n \n picked images yet !',
-                              style: TextStyle(fontSize: 16),
-                              textAlign: TextAlign.center,
-                              ),
-                            ),
+                      Container(
+                        color: Colors.blueGrey.shade100,
+                        height: MediaQuery.of(context).size.width * 0.5,
+                        width: MediaQuery.of(context).size.width * 0.5,
+                        child: imagesFileList != null ? previewImages() : const Center(
+                          child: Text(
+                            'You have not \n \n picked images yet !',
+                            style: TextStyle(fontSize: 16),
+                            textAlign: TextAlign.center,
                           ),
-                          IconButton(
-                              onPressed: (){
-                                setState(() {
-                                  imagesFileList = [];
-                                });
-                              },
-                              icon: const Icon(Icons.delete_forever, size: 30,),
-                          ),
-                        ],
+                        ),
                       ),
                     ],
                   ),
@@ -216,10 +204,14 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
               padding: const EdgeInsets.only(right: 10.0),
               child: FloatingActionButton(
                   backgroundColor: Colors.yellow,
-                  onPressed: (){
+                  onPressed: imagesFileList.isEmpty ? () {
                     pickProductImages();
+                  } : (){
+                    setState(() {
+                      imagesFileList = [];
+                    });
                   },
-                  child:  const Icon(Icons.photo_library, color: Colors.black,),
+                  child:   Icon(imagesFileList.isEmpty? Icons.photo_library : Icons.delete_forever, color: Colors.black,),
               ),
             ),
             FloatingActionButton(
