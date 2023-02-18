@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:zando/widgets/snackbar.dart';
 
 class UploadProductScreen extends StatefulWidget {
@@ -21,10 +25,45 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   void uploadProduct() {
     if(_formKey.currentState!.validate()) {
       _formKey.currentState!.save();
+      if (imagesFileList.isNotEmpty) {
+        setState(() {
+          imagesFileList = [];
+        });
+        _formKey.currentState!.reset();
+      } else {
+        MyMessageHandler.showSnackBar(_scaffoldKey, 'please pick some images first');
+      }
     } else {
       MyMessageHandler.showSnackBar(_scaffoldKey, 'please fill all fields');
     }
   }
+
+  final ImagePicker _picker = ImagePicker();
+
+  List<XFile> imagesFileList = [];
+  dynamic _pickedImageError;
+
+
+  void pickProductImages() async {
+    try {
+      final pickedImages = await _picker.pickMultiImage(
+          maxHeight: 300,
+          maxWidth: 300,
+          imageQuality: 95,
+      );
+      setState(() {
+        imagesFileList = pickedImages;
+      });
+    } catch(e) {
+      setState(() {
+        _pickedImageError = e;
+      });
+      print(_pickedImageError);
+    }
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,17 +81,29 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        color: Colors.blueGrey.shade100,
-                        height: MediaQuery.of(context).size.width * 0.5,
-                        width: MediaQuery.of(context).size.width * 0.5,
-                        child: const Center(
-                          child: Text(
-                            'You have not \n \n picked images yet !',
-                            style: TextStyle(fontSize: 16),
-                            textAlign: TextAlign.center,
+                      Stack(
+                        children: [
+                          Container(
+                          color: Colors.blueGrey.shade100,
+                          height: MediaQuery.of(context).size.width * 0.5,
+                          width: MediaQuery.of(context).size.width * 0.5,
+                          child: imagesFileList != null ? previewImages() : const Center(
+                            child: Text(
+                              'You have not \n \n picked images yet !',
+                              style: TextStyle(fontSize: 16),
+                              textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
-                        ),
+                          IconButton(
+                              onPressed: (){
+                                setState(() {
+                                  imagesFileList = [];
+                                });
+                              },
+                              icon: const Icon(Icons.delete_forever, size: 30,),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -165,7 +216,9 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
               padding: const EdgeInsets.only(right: 10.0),
               child: FloatingActionButton(
                   backgroundColor: Colors.yellow,
-                  onPressed: (){},
+                  onPressed: (){
+                    pickProductImages();
+                  },
                   child:  const Icon(Icons.photo_library, color: Colors.black,),
               ),
             ),
@@ -180,6 +233,25 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
         ),
       ),
     );
+  }
+
+  Widget previewImages() {
+    if (imagesFileList.isNotEmpty) {
+      return ListView.builder(
+        itemCount: imagesFileList.length,
+        itemBuilder: (context, index) {
+          return Image.file(File(imagesFileList[index].path));
+        },
+      );
+    } else {
+      return const Center(
+        child: Text(
+          'You have not \n \n picked images yet !',
+          style: TextStyle(fontSize: 16),
+          textAlign: TextAlign.center,
+        ),
+      );
+    }
   }
 }
 
