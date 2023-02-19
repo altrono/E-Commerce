@@ -27,12 +27,12 @@ class KidsCategory extends StatelessWidget {
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 70,
                       crossAxisCount: 3,
-                      children: List.generate(kids.length, (index) {
+                      children: List.generate(kids.length - 1, (index) {
                         return SubCategModel(
                           mainCategName: 'kids',
-                          subCategName: kids[index],
+                          subCategName: kids[index + 1],
                           assetName: 'images/kids/kids$index.jpg',
-                          subcategLabel: kids[index],
+                          subcategLabel: kids[index + 1],
                         );
                       }),
                     ),

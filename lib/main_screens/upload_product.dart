@@ -3,49 +3,50 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:zando/utilities/categ_list.dart';
 import 'package:zando/widgets/snackbar.dart';
 
 
-List<String> categ = [
-  'select category',
-  'men',
-  'women',
-  'shoes',
-  'bags',
-];
-
-List<String> categMen = [
-  'subcategory',
-  'shirt',
-  'jacket',
-  'shoes',
-  'jeans',
-];
-
-List<String> categWomen = [
-  'subcategory',
-  'w shirt',
-  'w jacket',
-  'w shoes',
-  'w jeans',
-];
-
-List<String> categShoes = [
-  'subcategory',
-  'sh shirt',
-  'sh jacket',
-  'sh shoes',
-  'sh jeans',
-];
-
-List<String> categBags = [
-  'subcategory',
-  'b shirt',
-  'b jacket',
-  'b shoes',
-  'b jeans',
-];
-
+// List<String> categ = [
+//   'select category',
+//   'men',
+//   'women',
+//   'shoes',
+//   'bags',
+// ];
+//
+// List<String> categMen = [
+//   'subcategory',
+//   'shirt',
+//   'jacket',
+//   'shoes',
+//   'jeans',
+// ];
+//
+// List<String> categWomen = [
+//   'subcategory',
+//   'w shirt',
+//   'w jacket',
+//   'w shoes',
+//   'w jeans',
+// ];
+//
+// List<String> categShoes = [
+//   'subcategory',
+//   'sh shirt',
+//   'sh jacket',
+//   'sh shoes',
+//   'sh jeans',
+// ];
+//
+// List<String> categBags = [
+//   'subcategory',
+//   'b shirt',
+//   'b jacket',
+//   'b shoes',
+//   'b jeans',
+// ];
+//
 
 
 class UploadProductScreen extends StatefulWidget {
@@ -69,19 +70,26 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   List<String> subCategList = [];
 
   void uploadProduct() {
-    if(_formKey.currentState!.validate()) {
-      _formKey.currentState!.save();
-      if (imagesFileList.isNotEmpty) {
-        setState(() {
-          imagesFileList = [];
-        });
-        _formKey.currentState!.reset();
+    if (mainCategoryValue != 'select category' && subCategValue != 'subcategory') {
+      if(_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+        if (imagesFileList.isNotEmpty) {
+          setState(() {
+            imagesFileList = [];
+            mainCategoryValue= 'select category';
+            subCategValue = 'subcategory';
+          });
+          _formKey.currentState!.reset();
+        } else {
+          MyMessageHandler.showSnackBar(_scaffoldKey, 'please pick some images first');
+        }
       } else {
-        MyMessageHandler.showSnackBar(_scaffoldKey, 'please pick some images first');
+        MyMessageHandler.showSnackBar(_scaffoldKey, 'please fill all fields');
       }
     } else {
-      MyMessageHandler.showSnackBar(_scaffoldKey, 'please fill all fields');
+      MyMessageHandler.showSnackBar(_scaffoldKey, 'please select categories');
     }
+
   }
 
   final ImagePicker _picker = ImagePicker();
@@ -106,13 +114,40 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
       });
       print(_pickedImageError);
     }
+  }
 
-
+  void selectedMainCateg(String value) {
+    if (value == 'select category') {
+      subCategList = [];
+    } else if (value == 'men') {
+      subCategList = men;
+    } else if (value == 'women') {
+      subCategList = women;
+    } else if (value == 'electronics') {
+      subCategList = electronics;
+    } else if (value == 'accessories') {
+      subCategList = accessories;
+    } else if (value == 'shoes') {
+      subCategList = shoes;
+    } else if (value == 'home & garden') {
+      subCategList = homeandgarden;
+    } else if (value == 'beauty') {
+      subCategList = beauty;
+    } else if (value == 'kids') {
+      subCategList = kids;
+    } else if (value == 'bags') {
+      subCategList = bags;
+    }
+    setState(() {
+      mainCategoryValue= value!;
+      subCategValue = 'subcategory';
+    });
   }
 
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return ScaffoldMessenger(
       key: _scaffoldKey,
       child: Scaffold(
@@ -129,8 +164,8 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                     children: [
                       Container(
                         color: Colors.blueGrey.shade100,
-                        height: MediaQuery.of(context).size.width * 0.5,
-                        width: MediaQuery.of(context).size.width * 0.5,
+                        height: size.width * 0.5,
+                        width: size.width * 0.5,
                         child: imagesFileList != null ? previewImages() : const Center(
                           child: Text(
                             'You have not \n \n picked images yet !',
@@ -139,44 +174,60 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                           ),
                         ),
                       ),
-                      Column(
-                        children: [
-                          const Text('select main category'),
-                          DropdownButton(
-                              value: mainCategoryValue,
-                              items: categ.map<DropdownMenuItem<String>>((value) {
-                                return DropdownMenuItem(
-                                  child: Text(value),
-                                  value: value,
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                if (value == 'men') {
-                                  subCategList = categWomen;
-                                } else if (value == 'women') {
-                                  subCategList = categWomen;
-                                }
-                                setState(() {
-                                  mainCategoryValue= value!;
-                                  subCategValue = 'subcategory';
-                                });
-                              }),
-                          const Text('select subcategory'),
-                          DropdownButton(
-                              value: subCategValue,
-                              items: subCategList.map<DropdownMenuItem<String>>((value) {
-                                return DropdownMenuItem(
-                                  child: Text(value),
-                                  value: value,
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  subCategValue= value!;
-
-                                });
-                              }),
-                        ],
+                      SizedBox(
+                        height: size.width * 0.5,
+                        width: size.width * 0.5,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                const Text('* select main category', style: TextStyle(color: Colors.red),),
+                                DropdownButton(
+                                    iconSize: 40,
+                                    iconEnabledColor: Colors.red,
+                                    iconDisabledColor: Colors.black,
+                                    dropdownColor: Colors.yellow.shade400,
+                                    menuMaxHeight: 500,
+                                    value: mainCategoryValue,
+                                    items: maincateg.map<DropdownMenuItem<String>>((value) {
+                                      return DropdownMenuItem(
+                                        child: Text(value),
+                                        value: value,
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      selectedMainCateg(value!);
+                                    }),
+                              ],
+                            ),
+                            Column(
+                              children: [
+                                const Text('* select subcategory', style: TextStyle(color: Colors.red),),
+                                DropdownButton(
+                                    iconSize: 40,
+                                    iconEnabledColor: Colors.red,
+                                    iconDisabledColor: Colors.black,
+                                    dropdownColor: Colors.yellow.shade400,
+                                    menuMaxHeight: 500,
+                                    disabledHint: const Text('select category'),
+                                    value: subCategValue,
+                                    items: subCategList.map<DropdownMenuItem<String>>((value) {
+                                      return DropdownMenuItem(
+                                        child: Text(value),
+                                        value: value,
+                                      );
+                                    }).toList(),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        subCategValue= value!;
+                                      });
+                                    }),
+                              ],
+                            )
+                          ],
+                        ),
                       )
                     ],
                   ),
