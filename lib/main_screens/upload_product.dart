@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:zando/utilities/categ_list.dart';
 import 'package:zando/widgets/snackbar.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:path/path.dart' as path;
 
 
 // List<String> categ = [
@@ -69,11 +71,29 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   String subCategValue = 'subcategory';
   List<String> subCategList = [];
 
-  void uploadProduct() {
+  void uploadProduct() async {
     if (mainCategoryValue != 'select category' && subCategValue != 'subcategory') {
       if(_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         if (imagesFileList.isNotEmpty) {
+          try {
+            for (var image in imagesFileList) {
+              firebase_storage.Reference ref = firebase_storage
+                  .FirebaseStorage.instance
+                  .ref('products/${path.basename(image.path)}');
+
+              await ref.putFile(File(image.path)).whenComplete(() async {
+                await ref.getDownloadURL().then((value) {
+                  imagesUrlList.add(value);
+                });
+              });
+            }
+          } catch(e) {
+            print(e);
+          }
+
+
+
           setState(() {
             imagesFileList = [];
             mainCategoryValue= 'select category';
@@ -95,6 +115,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   final ImagePicker _picker = ImagePicker();
 
   List<XFile> imagesFileList = [];
+  List<String> imagesUrlList = [];
   dynamic _pickedImageError;
 
 

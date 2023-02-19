@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:zando/auth/customer_login.dart';
 import 'package:zando/auth/customer_signup.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: '/welcome_screen',
+      initialRoute:FirebaseAuth.instance.currentUser == null ? '/welcome_screen': '/supplier_home_screen',
       routes: {
         '/welcome_screen': (context) => const WelcomeScreen(),
         '/customer_home_screen': (context) => const CustomerHomeScreen(),
