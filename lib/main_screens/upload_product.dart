@@ -5,6 +5,49 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:zando/widgets/snackbar.dart';
 
+
+List<String> categ = [
+  'select category',
+  'men',
+  'women',
+  'shoes',
+  'bags',
+];
+
+List<String> categMen = [
+  'subcategory',
+  'shirt',
+  'jacket',
+  'shoes',
+  'jeans',
+];
+
+List<String> categWomen = [
+  'subcategory',
+  'w shirt',
+  'w jacket',
+  'w shoes',
+  'w jeans',
+];
+
+List<String> categShoes = [
+  'subcategory',
+  'sh shirt',
+  'sh jacket',
+  'sh shoes',
+  'sh jeans',
+];
+
+List<String> categBags = [
+  'subcategory',
+  'b shirt',
+  'b jacket',
+  'b shoes',
+  'b jeans',
+];
+
+
+
 class UploadProductScreen extends StatefulWidget {
   const UploadProductScreen({Key? key}) : super(key: key);
 
@@ -21,6 +64,9 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   late int quantity;
   late String proName;
   late String proDesc;
+  String mainCategoryValue = 'select category';
+  String subCategValue = 'subcategory';
+  List<String> subCategList = [];
 
   void uploadProduct() {
     if(_formKey.currentState!.validate()) {
@@ -93,6 +139,45 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                           ),
                         ),
                       ),
+                      Column(
+                        children: [
+                          const Text('select main category'),
+                          DropdownButton(
+                              value: mainCategoryValue,
+                              items: categ.map<DropdownMenuItem<String>>((value) {
+                                return DropdownMenuItem(
+                                  child: Text(value),
+                                  value: value,
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                if (value == 'men') {
+                                  subCategList = categWomen;
+                                } else if (value == 'women') {
+                                  subCategList = categWomen;
+                                }
+                                setState(() {
+                                  mainCategoryValue= value!;
+                                  subCategValue = 'subcategory';
+                                });
+                              }),
+                          const Text('select subcategory'),
+                          DropdownButton(
+                              value: subCategValue,
+                              items: subCategList.map<DropdownMenuItem<String>>((value) {
+                                return DropdownMenuItem(
+                                  child: Text(value),
+                                  value: value,
+                                );
+                              }).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  subCategValue= value!;
+
+                                });
+                              }),
+                        ],
+                      )
                     ],
                   ),
                   const SizedBox(
