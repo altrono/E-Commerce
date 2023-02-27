@@ -73,6 +73,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   String mainCategoryValue = 'select category';
   String subCategValue = 'subcategory';
   List<String> subCategList = [];
+  bool processing= false;
 
 
   Future<void> uploadImages() async {
@@ -80,6 +81,9 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
       if(_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
         if (imagesFileList.isNotEmpty) {
+          setState(() {
+            processing = true;
+          });
           try {
             for (var image in imagesFileList) {
               firebase_storage.Reference ref = firebase_storage
@@ -125,6 +129,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
                         'discount': 0,
             }).whenComplete(() {
                 setState(() {
+                  processing = false;
                   imagesFileList = [];
                   mainCategoryValue= 'select category';
                   // subCategValue = 'subcategory';
@@ -404,10 +409,11 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
             ),
             FloatingActionButton(
                 backgroundColor: Colors.yellow,
-                onPressed: (){
+                onPressed:processing == true ? null : (){
                   uploadProduct();
                 },
-                child:  const Icon(Icons.upload, color: Colors.black,),
+                child: processing == true ? const CircularProgressIndicator(color: Colors.black,)
+                    :  const Icon(Icons.upload, color: Colors.black,),
             ),
           ],
         ),
