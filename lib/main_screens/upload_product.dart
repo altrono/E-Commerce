@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 import 'package:zando/utilities/categ_list.dart';
 import 'package:zando/widgets/snackbar.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -68,6 +69,7 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   late int quantity;
   late String proName;
   late String proDesc;
+  late String productId;
   String mainCategoryValue = 'select category';
   String subCategValue = 'subcategory';
   List<String> subCategList = [];
@@ -109,7 +111,9 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   void uploadData() async {
     if (imagesUrlList.isNotEmpty) {
       CollectionReference productRef = FirebaseFirestore.instance.collection('products');
-                      await productRef.doc().set({
+                      productId = const Uuid().v4();
+                      await productRef.doc(productId).set({
+                        'proid': productId,
                         'maincateg': mainCategoryValue,
                         'subcateg': subCategValue,
                         'price': price,
