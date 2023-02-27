@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:zando/utilities/categ_list.dart';
@@ -71,7 +72,8 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
   String subCategValue = 'subcategory';
   List<String> subCategList = [];
 
-  void uploadProduct() async {
+
+  Future<void> uploadImages() async {
     if (mainCategoryValue != 'select category' && subCategValue != 'subcategory') {
       if(_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
@@ -92,14 +94,6 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
             print(e);
           }
 
-
-
-          setState(() {
-            imagesFileList = [];
-            mainCategoryValue= 'select category';
-            subCategValue = 'subcategory';
-          });
-          _formKey.currentState!.reset();
         } else {
           MyMessageHandler.showSnackBar(_scaffoldKey, 'please pick some images first');
         }
@@ -109,7 +103,40 @@ class _UploadProductScreenState extends State<UploadProductScreen> {
     } else {
       MyMessageHandler.showSnackBar(_scaffoldKey, 'please select categories');
     }
+  }
 
+
+  void uploadData() async {
+    if (imagesUrlList.isNotEmpty) {
+      CollectionReference productRef = FirebaseFirestore.instance.collection('products');
+                      await productRef.doc().set({
+                        'maincateg': mainCategoryValue,
+                        'subcateg': subCategValue,
+                        'price': price,
+                        'intock': quantity,
+                        'proname': proName,
+                        'prodesc': proDesc,
+                        'sid': FirebaseAuth.instance.currentUser!.uid,
+                        'proimages': imagesUrlList,
+                        'discount': 0,
+            }).whenComplete(() {
+                setState(() {
+                  imagesFileList = [];
+                  mainCategoryValue= 'select category';
+                  // subCategValue = 'subcategory';
+                  subCategList = [];
+                  imagesUrlList = [];
+                });
+                _formKey.currentState!.reset();
+            });
+
+    } else {
+      print('no images');
+    }
+  }
+
+  void uploadProduct() async {
+    await uploadImages().whenComplete(() => uploadData());
   }
 
   final ImagePicker _picker = ImagePicker();
