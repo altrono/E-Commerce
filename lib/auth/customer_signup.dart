@@ -288,7 +288,7 @@ class _CustomerRegisterScreenState extends State<CustomerRegisterScreen> {
                         actionLabel: 'Log In',
                         haveAccount: 'Already have an account? ',
                         onpressed: (){
-                          Navigator.pushReplacementNamed(context, '/customer_login');
+                          Navigator.pushReplacementNamed(context, '/supplier_login');
                         },
                       ),
 
