@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:zando/minor_screen/search_screen.dart';
 
+import '../galleries/men_gallery.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -38,7 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: const TabBarView(
           children: [
-            Center(child: Text('men screen'),),
+            MenGalleryScreen(),
             Center(child: Text('women screen'),),
             Center(child: Text('shoes screen'),),
             Center(child: Text('Bag screen'),),
