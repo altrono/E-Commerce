@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
+import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 
 class MenGalleryScreen extends StatefulWidget {
   const MenGalleryScreen({Key? key}) : super(key: key);
@@ -21,15 +23,75 @@ class _MenGalleryScreenState extends State<MenGalleryScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Text('Loding');
           }
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document){
-              Map<String, dynamic> data = document.data()! as Map<String, dynamic>;
-              return ListTile(
-                leading: Image(image: NetworkImage(data['proimages'][0]),),
-                title: Text(data['proname']),
-                subtitle: Text('R ${data['price'].toString()})'),
-              );
-             }).toList(),
+          return SingleChildScrollView(
+            child: StaggeredGridView.countBuilder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: snapshot.data!.docs.length,
+                crossAxisCount: 2,
+                itemBuilder: (context, index){
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15)
+                      ),
+                      child: Column(
+                        children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(15),
+                                  topRight: Radius.circular(15)
+                              ),
+                              child: Container(
+                                constraints: BoxConstraints(maxHeight: 250, minHeight: 100),
+                                child: Image(
+                                  image: NetworkImage(snapshot.data!.docs[index]['proimages'][0]),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  Text(
+                                      snapshot.data!.docs[index]['proname'],
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(color: Colors.grey.shade600, fontSize: 16, fontWeight: FontWeight.w600),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'R ${snapshot.data!.docs[index]['price'].toStringAsFixed(2)}',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      IconButton(
+                                        onPressed: (){},
+                                        icon: Icon(
+                                          Icons.favorite_border_outlined,
+                                          color: Colors.red,
+                                        ),
+
+                                      ),
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+
+                        ],
+                      ),
+                    ),
+                  );
+                },
+                staggeredTileBuilder: (context) => const StaggeredTile.fit(1)),
           );
         });
   }
