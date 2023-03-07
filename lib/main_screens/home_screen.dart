@@ -1,5 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:zando/galleries/beauty_gallery.dart';
+import 'package:zando/galleries/kids_gallery.dart';
+import 'package:zando/galleries/shoes_gallery.dart';
+import 'package:zando/galleries/women-category.dart';
 import 'package:zando/minor_screen/search_screen.dart';
 
 import '../galleries/men_gallery.dart';
@@ -42,14 +46,14 @@ class _HomeScreenState extends State<HomeScreen> {
         body: const TabBarView(
           children: [
             MenGalleryScreen(),
-            Center(child: Text('women screen'),),
-            Center(child: Text('shoes screen'),),
+            WomenGalleryScreen(),
+            ShoesGalleryScreen(),
             Center(child: Text('Bag screen'),),
             Center(child: Text('Electronics screen'),),
             Center(child: Text('Accessories screen'),),
             Center(child: Text('Home & Garden screen'),),
-            Center(child: Text('Kids screen'),),
-            Center(child: Text('Beauty screen'),),
+            KidsGalleryScreen(),
+            BeautyGalleryScreen(),
           ],
         ),
       ),
