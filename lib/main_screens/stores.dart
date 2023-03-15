@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:zando/main_screens/visit_store.dart';
 import 'package:zando/widgets/appbar_widgets.dart';
 
 class StoresScreen extends StatelessWidget {
@@ -34,34 +35,39 @@ class StoresScreen extends StatelessWidget {
                       crossAxisSpacing: 25,
                   ),
                   itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        Stack(
-                          children: [
-                            SizedBox(
-                              height: 120,
-                              width: 120,
-                              child: Image.asset('images/inapp/store.jpg'),
-                            ),
-                            Positioned(
-                                left: 10,
-                                bottom: 28,
-                                child: SizedBox(
-                                  height: 50,
-                                  width: 100,
-                                  child: Image.network(snapshot.data!.docs[index]['storelogo'], fit: BoxFit.cover,),
-                            ))
-                          ],
-                        ),
-                        Text(
-                            snapshot.data!.docs[index]['storename'].toLowerCase(),
-                            style: const TextStyle(
-                              fontFamily: 'Akaya',
-                              fontSize: 26,
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => VisitStore(suppId: snapshot.data!.docs[index]['sid'],)));
+                      } ,
+                      child: Column(
+                        children: [
+                          Stack(
+                            children: [
+                              SizedBox(
+                                height: 120,
+                                width: 120,
+                                child: Image.asset('images/inapp/store.jpg'),
+                              ),
+                              Positioned(
+                                  left: 10,
+                                  bottom: 28,
+                                  child: SizedBox(
+                                    height: 50,
+                                    width: 100,
+                                    child: Image.network(snapshot.data!.docs[index]['storelogo'], fit: BoxFit.cover,),
+                              ))
+                            ],
+                          ),
+                          Text(
+                              snapshot.data!.docs[index]['storename'].toLowerCase(),
+                              style: const TextStyle(
+                                fontFamily: 'Akaya',
+                                fontSize: 26,
 
-                            ),
-                        )
-                      ],
+                              ),
+                          )
+                        ],
+                      ),
                     );
                   });
             }
