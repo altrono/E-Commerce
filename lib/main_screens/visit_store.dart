@@ -15,6 +15,8 @@ class VisitStore extends StatefulWidget {
 }
 
 class _VisitStoreState extends State<VisitStore> {
+  bool following = false;
+
   @override
   Widget build(BuildContext context) {
     CollectionReference stores = FirebaseFirestore.instance.collection('suppliers');
@@ -82,14 +84,15 @@ class _VisitStoreState extends State<VisitStore> {
                                 color: Colors.yellow,
                                 borderRadius: BorderRadius.circular(25)
                               ),
-                              child:const  Center(
-                                child: Text(
-                                    'FOLLOW',
-                                    style: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16
-                                    ),
-                                ),
+                              child: MaterialButton(
+                                onPressed: (){
+                                  setState(() {
+                                    following = !following;
+                                  });
+                                },
+                                child: following == true ? const Text(
+                                  'FOLLOW'
+                                ) : const Text('UNFOLLOW'),
                               ),
 
                             )
