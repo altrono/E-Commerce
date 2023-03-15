@@ -27,7 +27,7 @@ class _FullScreenViewState extends State<FullScreenView> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Center(child: Text('${index + 1}/${widget.imagesList.length}', style: TextStyle(letterSpacing: 8, fontSize: 24),)),
+            Center(child: Text('${index + 1}/${widget.imagesList.length}', style: const TextStyle(letterSpacing: 8, fontSize: 24),)),
             SizedBox(
               height: size.height * 0.5,
               child: PageView(
@@ -55,7 +55,8 @@ class _FullScreenViewState extends State<FullScreenView> {
     return List.generate(widget.imagesList.length, (index) {
       return InteractiveViewer(
         transformationController: TransformationController(),
-        child: Image.network(widget.imagesList[index].toString(),
+        child: Image.network(
+          widget.imagesList[index].toString(),
         ),
       );
     });
