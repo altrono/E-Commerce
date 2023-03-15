@@ -6,6 +6,7 @@ import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import 'package:zando/widgets/yellow_button.dart';
 
 import '../models/product_model.dart';
+import 'full_screen_view.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   final dynamic proList;
@@ -33,47 +34,52 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
           body: SingleChildScrollView(
             child: Column(
               children: [
-                Stack(
-                  children: [
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.45,
-                      child: Swiper(
-                          pagination: SwiperPagination(builder: SwiperPagination.dots),
-                          itemBuilder: (context, index) {
-                            return Image(
-                                image: NetworkImage(
-                                  imagesList[index],
-                            ));
-                          },
-                          itemCount: imagesList.length),
-                    ),
-                    Positioned(
-                        left: 15,
-                        top: 20,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.yellow,
-                          child: IconButton(
-                            icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
-                            onPressed: (){
-                              Navigator.pop(context);
+                InkWell(
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => FullScreenView(imagesList: imagesList,)));
+                  },
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.45,
+                        child: Swiper(
+                            pagination: const SwiperPagination(builder: SwiperPagination.dots),
+                            itemBuilder: (context, index) {
+                              return Image(
+                                  image: NetworkImage(
+                                    imagesList[index],
+                              ));
                             },
+                            itemCount: imagesList.length),
+                      ),
+                      Positioned(
+                          left: 15,
+                          top: 20,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.yellow,
+                            child: IconButton(
+                              icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
+                              onPressed: (){
+                                Navigator.pop(context);
+                              },
+                            ),
                           ),
-                        ),
-                    ),
-                    Positioned(
-                        right: 15,
-                        top: 20,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.yellow,
-                          child: IconButton(
-                            icon: const Icon(Icons.share, color: Colors.black,),
-                            onPressed: (){
+                      ),
+                      Positioned(
+                          right: 15,
+                          top: 20,
+                          child: CircleAvatar(
+                            backgroundColor: Colors.yellow,
+                            child: IconButton(
+                              icon: const Icon(Icons.share, color: Colors.black,),
+                              onPressed: (){
 
-                            },
+                              },
+                            ),
                           ),
-                        ),
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
                 Padding(
                     padding: const EdgeInsets.fromLTRB(8, 8, 8, 50),
