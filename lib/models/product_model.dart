@@ -13,7 +13,7 @@ class ProductModel extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => const ProductDetailsScreen()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ProductDetailsScreen(proList: products,)));
       },
       child: Padding(
         padding: const EdgeInsets.all(8.0),

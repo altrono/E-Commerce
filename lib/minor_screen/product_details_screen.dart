@@ -8,137 +8,184 @@ import 'package:zando/widgets/yellow_button.dart';
 import '../models/product_model.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({Key? key}) : super(key: key);
+  final dynamic proList;
+
+  const ProductDetailsScreen({Key? key, required this.proList}) : super(key: key);
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
-  final Stream<QuerySnapshot> _productStream = FirebaseFirestore.instance.collection('products').snapshots();
-  @override
+
+  late List<dynamic> imagesList = widget.proList['proimages'];
+   @override
   Widget build(BuildContext context) {
+     final Stream<QuerySnapshot> _productStream = FirebaseFirestore
+         .instance
+         .collection('products')
+         .where('maincateg', isEqualTo: widget.proList['maincateg'])
+         .where('subcateg', isEqualTo: widget.proList['subcateg'])
+         .snapshots();
     return Material(
       child: SafeArea(
         child: Scaffold(
           body: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  child: Swiper(
-                      pagination: SwiperPagination(builder: SwiperPagination.dots),
-                      itemBuilder: (context, index) {
-                        return Image(
-                            image: NetworkImage(
-                              'https://cdn.shopify.com/s/files/1/0555/8897/8864/products/image_d99dbc81-b3a0-48a2-9989-368ebbcb1f45_720x514.jpg?v=1641320237',
-                        ));
-                      },
-                      itemCount: 1),
-                ),
-                Text('pro nameeee', style: TextStyle(
-                    fontSize: 18,
-                    color: Colors.grey.shade600,
-                    fontWeight: FontWeight.w600
-                ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Stack(
                   children: [
-                    Row(
-                      children: const [
-                        Text(
-                          'ZAR ',
-                          style: TextStyle(
-                            color: Colors.red,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600
-                          ),
-                        ),
-                        Text(
-                          '100.00',
-                          style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600
-                          ),
-                        ),
-                      ],
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.45,
+                      child: Swiper(
+                          pagination: SwiperPagination(builder: SwiperPagination.dots),
+                          itemBuilder: (context, index) {
+                            return Image(
+                                image: NetworkImage(
+                                  imagesList[index],
+                            ));
+                          },
+                          itemCount: imagesList.length),
                     ),
-                    IconButton(
-                        onPressed: (){},
-                        icon: const Icon(
-                          Icons.favorite_border_outlined,
-                          color: Colors.red,
-                          size: 30,
+                    Positioned(
+                        left: 15,
+                        top: 20,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.yellow,
+                          child: IconButton(
+                            icon: const Icon(Icons.arrow_back_ios, color: Colors.black,),
+                            onPressed: (){
+                              Navigator.pop(context);
+                            },
+                          ),
+                        ),
+                    ),
+                    Positioned(
+                        right: 15,
+                        top: 20,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.yellow,
+                          child: IconButton(
+                            icon: const Icon(Icons.share, color: Colors.black,),
+                            onPressed: (){
+
+                            },
+                          ),
                         ),
                     ),
                   ],
                 ),
-                const Text(
-                  '99 pieces available int stock',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.blueGrey,
-                  ),
-                ),
-                const ProDetailsHeader(label: '  Item Description  ',),
-
-                Text(
-                    'pro description lorem ipsum dum nonu rert poir que donc lors que dout gout pour request ds',
-                    textScaleFactor: 1.1,
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.blueGrey.shade800,
-                    ),
-                ),
-
-                const ProDetailsHeader(label: '  Similar Items  ',),
-                SizedBox(
-                  child: StreamBuilder<QuerySnapshot>(
-                      stream: _productStream,
-                      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                        if (snapshot.hasError) {
-                          return const Center(child: Text('Sum went wrong'));
-                        }
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: Text('Loading...'));
-                        }
-
-                        if (snapshot.data!.docs.isEmpty){
-                          return const Center(
-                            child: Text(
-                              'This category \nhas no items yet!',
-                              style: TextStyle(
-                                  fontSize: 22,
-                                  color: Colors.blueGrey,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: 'Acme',
-                                  letterSpacing: 1.5
-                              ),
-                              textAlign: TextAlign.center,
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 50),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(widget.proList['proname'], style: TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey.shade600,
+                            fontWeight: FontWeight.w600
+                        ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                const Text(
+                                  'ZAR ',
+                                  style: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                ),
+                                Text(
+                                  widget.proList['price'].toStringAsFixed(2),
+                                  style: const TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                ),
+                              ],
                             ),
-                          );
-                        }
-                        return SingleChildScrollView(
-                          child: StaggeredGridView.countBuilder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: snapshot.data!.docs.length,
-                              crossAxisCount: 2,
-                              itemBuilder: (context, index){
-                                return ProductModel(products: snapshot.data!.docs[index],);
-                              },
-                              staggeredTileBuilder: (context) => const StaggeredTile.fit(1)),
-                        );
-                      }),
+                            IconButton(
+                              onPressed: (){},
+                              icon: const Icon(
+                                Icons.favorite_border_outlined,
+                                color: Colors.red,
+                                size: 30,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Text(
+                          '${widget.proList["intock"].toString()} pieces available int stock',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.blueGrey,
+                          ),
+                        ),
+                        const ProDetailsHeader(label: '  Item Description  ',),
+
+                        Text(
+                          widget.proList['prodesc'],
+                          textScaleFactor: 1.1,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.blueGrey.shade800,
+                          ),
+                        ),
+
+                        const ProDetailsHeader(label: '  Similar Items  ',),
+                        SizedBox(
+                          child: StreamBuilder<QuerySnapshot>(
+                              stream: _productStream,
+                              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                                if (snapshot.hasError) {
+                                  return const Center(child: Text('Sum went wrong'));
+                                }
+                                if (snapshot.connectionState == ConnectionState.waiting) {
+                                  return const Center(child: Text('Loading...'));
+                                }
+
+                                if (snapshot.data!.docs.isEmpty){
+                                  return const Center(
+                                    child: Text(
+                                      'This category \nhas no items yet!',
+                                      style: TextStyle(
+                                          fontSize: 22,
+                                          color: Colors.blueGrey,
+                                          fontWeight: FontWeight.bold,
+                                          fontFamily: 'Acme',
+                                          letterSpacing: 1.5
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  );
+                                }
+                                return SingleChildScrollView(
+                                  child: StaggeredGridView.countBuilder(
+                                      physics: const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: snapshot.data!.docs.length,
+                                      crossAxisCount: 2,
+                                      itemBuilder: (context, index){
+                                        return ProductModel(products: snapshot.data!.docs[index],);
+                                      },
+                                      staggeredTileBuilder: (context) => const StaggeredTile.fit(1)),
+                                );
+                              }),
+                        )
+                      ],
+                    ),
                 )
               ],
             ),
           ),
           bottomSheet: Padding(
-            padding: const EdgeInsets.only(top: 6.0),
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
