@@ -7,6 +7,7 @@ import 'package:zando/dashboard_components/supplier_balance.dart';
 import 'package:zando/dashboard_components/supplier_orders.dart';
 import 'package:zando/dashboard_components/supplier_statics.dart';
 import 'package:zando/main_screens/supplier_home_screen.dart';
+import 'package:zando/main_screens/visit_store.dart';
 import 'package:zando/widgets/appbar_widgets.dart';
 
 import '../widgets/my_alert_dialog.dart';
@@ -31,8 +32,8 @@ List<IconData> icons = [
 ];
 
 
-List<Widget> pages = const [
-  MyStore(),
+List<Widget> pages =  [
+  VisitStore(suppId: FirebaseAuth.instance.currentUser!.uid,),
   SupplierOrders(),
   EditBusiness(),
   ManageProducts(),

@@ -54,7 +54,12 @@ class StoresScreen extends StatelessWidget {
                                   child: SizedBox(
                                     height: 50,
                                     width: 100,
-                                    child: Image.network(snapshot.data!.docs[index]['storelogo'], fit: BoxFit.cover,),
+                                    child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(1.0),
+                                          child: Image.network(snapshot.data!.docs[index]['storelogo'], fit: BoxFit.cover,),
+                                        )),
                               ))
                             ],
                           ),

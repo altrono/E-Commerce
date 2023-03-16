@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
+import 'package:zando/main_screens/visit_store.dart';
 import 'package:zando/widgets/yellow_button.dart';
 
 import '../models/product_model.dart';
@@ -197,7 +198,9 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               children: [
                 Row(
                   children: [
-                    IconButton(onPressed: (){}, icon: Icon(Icons.store)),
+                    IconButton(onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => VisitStore(suppId: widget.proList['sid'])));
+                    }, icon: Icon(Icons.store)),
                     SizedBox(width: 20,),
                     IconButton(onPressed: (){}, icon: Icon(Icons.shopping_cart)),
                   ],

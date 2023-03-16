@@ -34,6 +34,7 @@ class _VisitStoreState extends State<VisitStore> {
           }
 
           if (snapshot.hasData && !snapshot.data!.exists) {
+            print(widget.suppId);
             return Text('Document doesnt exist');
           }
 
@@ -91,8 +92,9 @@ class _VisitStoreState extends State<VisitStore> {
                                   });
                                 },
                                 child: following == true ? const Text(
-                                  'FOLLOW'
-                                ) : const Text('UNFOLLOW'),
+                                  'FOLLOW',
+                                    style: TextStyle(fontSize: 10),
+                                ) : const Text('FOLLOWING', style: TextStyle(fontSize: 10),),
                               ),
 
                             )
