@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import 'package:zando/widgets/appbar_widgets.dart';
@@ -44,6 +45,7 @@ class _VisitStoreState extends State<VisitStore> {
             return Scaffold(
               backgroundColor: Colors.blueGrey,
                 appBar: AppBar(
+                  leading: YellowBackButton(),
                   toolbarHeight: 100,
                   flexibleSpace: Image.asset('images/inapp/coverimage.jpg', fit: BoxFit.cover,),
                   title: Row(
@@ -173,7 +175,12 @@ class _VisitStoreState extends State<VisitStore> {
                               staggeredTileBuilder: (context) => const StaggeredTile.fit(1)),
                         );
                       }),
-                )
+                ),
+                floatingActionButton: FloatingActionButton(
+                  onPressed: () {},
+                  backgroundColor: Colors.green,
+                  child: const Icon(FontAwesomeIcons.whatsapp, color: Colors.white, size: 30,),
+                ),
             );
           }
 
