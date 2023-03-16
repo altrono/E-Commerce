@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
@@ -74,7 +75,36 @@ class _VisitStoreState extends State<VisitStore> {
                                 ),
                               ],
                             ),
-                            Container(
+                            data['sid'] == FirebaseAuth.instance.currentUser!.uid
+                                ?  Container(
+                              height: 30,
+                              width: MediaQuery.of(context).size.width * 0.3,
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    width: 3,
+                                    color: Colors.black54,
+                                  ),
+                                  color: Colors.yellow,
+                                  borderRadius: BorderRadius.circular(12)
+                              ),
+                              child: MaterialButton(
+                                onPressed: (){
+
+                                },
+                                child:  Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Text(
+                                      'Edit',
+                                      style: TextStyle(fontSize: 10,),
+                                    ),
+                                    Icon(Icons.edit)
+                                  ],
+                                ),
+                              ),
+
+                            )
+                                :  Container(
                               height: 30,
                               width: MediaQuery.of(context).size.width * 0.3,
                               decoration: BoxDecoration(
