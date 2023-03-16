@@ -37,7 +37,7 @@ class _VisitStoreState extends State<VisitStore> {
 
           if (snapshot.hasData && !snapshot.data!.exists) {
             print(widget.suppId);
-            return Text('Document doesnt exist');
+            return const Text('Document doesnt exist');
           }
 
           if (snapshot.connectionState == ConnectionState.done) {
@@ -45,7 +45,7 @@ class _VisitStoreState extends State<VisitStore> {
             return Scaffold(
               backgroundColor: Colors.blueGrey,
                 appBar: AppBar(
-                  leading: YellowBackButton(),
+                  leading: const YellowBackButton(),
                   toolbarHeight: 100,
                   flexibleSpace: Image.asset('images/inapp/coverimage.jpg', fit: BoxFit.cover,),
                   title: Row(

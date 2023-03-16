@@ -19,11 +19,12 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   CollectionReference customers = FirebaseFirestore.instance.collection('customers');
+  CollectionReference anonymous = FirebaseFirestore.instance.collection('anonymous');
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
-        future: customers.doc(widget.documentId).get(),
+        future:FirebaseAuth.instance.currentUser!.isAnonymous ? anonymous.doc(widget.documentId).get() : customers.doc(widget.documentId).get(),
         builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
 
           if (snapshot.hasError) {
@@ -139,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             'Cart',
                                             style: TextStyle(
                                               color: Colors.yellow,
-                                              fontSize: 20,
+                                              fontSize: 16,
 
                                             ),
                                           ),
@@ -165,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             'Orders',
                                             style: TextStyle(
                                               color: Colors.black54,
-                                              fontSize: 20,
+                                              fontSize: 16,
 
                                             ),
                                           ),
@@ -193,7 +194,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             'Wishlist',
                                             style: TextStyle(
                                               color: Colors.yellow,
-                                              fontSize: 20,
+                                              fontSize: 16,
 
                                             ),
                                           ),
