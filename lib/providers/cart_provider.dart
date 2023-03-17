@@ -9,15 +9,26 @@ class Product {
   String documentId;
   String suppId;
 
-  Product({
-    required this.name,
-    required this.price,
-    required this.qntty,
-    required this.qty,
-    required this.suppId,
-    required this.documentId,
-    required this.imagesUrl
-});
+    Product({
+      required this.name,
+      required this.price,
+      required this.qntty,
+      required this.qty,
+      required this.suppId,
+      required this.documentId,
+      required this.imagesUrl
+    });
+
+   void increase() {
+     qty++;
+   }
+
+  void decrease() {
+    qty--;
+  }
+
+
+
 }
 
 
@@ -52,4 +63,15 @@ class Cart extends ChangeNotifier {
     notifyListeners();
 
   }
+
+  void increment(Product product) {
+    product.increase();
+    notifyListeners();
+  }
+
+  void reduceByOne(Product product) {
+    product.decrease();
+    notifyListeners();
+  }
+
 }

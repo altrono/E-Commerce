@@ -34,6 +34,7 @@ class _CartScreenState extends State<CartScreen> {
             return ListView.builder(
                 itemCount: cart.count,
                 itemBuilder: (context, index) {
+                  final product = cart.getItems[index];
                 return Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Card(
@@ -56,7 +57,7 @@ class _CartScreenState extends State<CartScreen> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    cart.getItems[index].name,
+                                    product.name,
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -69,7 +70,7 @@ class _CartScreenState extends State<CartScreen> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                          'R ${cart.getItems[index].price.toStringAsFixed(2)}',
+                                          'R ${product.price.toStringAsFixed(2)}',
                                           style: const TextStyle(color: Colors.red, fontSize: 16, fontWeight: FontWeight.bold),
                                       ),
                                       Container(
@@ -80,10 +81,18 @@ class _CartScreenState extends State<CartScreen> {
                                         ),
                                         child: Row(
                                           children: [
-                                            IconButton(onPressed: (){},
+                                            IconButton(onPressed: (){
+                                              if (product.qty > 1) {
+                                                cart.reduceByOne(product);
+                                              }
+                                            },
                                                 icon: const Icon(FontAwesomeIcons.minus, size: 16,)),
-                                            Text('1', style: TextStyle(fontSize: 20, fontFamily: 'Acme'),),
-                                            IconButton(onPressed: (){},
+                                            Text('${product.qty.toString()}', style: TextStyle(fontSize: 20, fontFamily: 'Acme'),),
+                                            IconButton(onPressed: (){
+                                              if (product.qty < product.qntty) {
+                                                cart.increment(product);
+                                              }
+                                            },
                                                 icon: const Icon(FontAwesomeIcons.plus, size: 16,)),
                                           ],
                                         ),
