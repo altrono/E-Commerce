@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zando/providers/cart_provider.dart';
 import 'package:zando/widgets/appbar_widgets.dart';
 import '../widgets/yellow_button.dart';
 
@@ -26,41 +28,13 @@ class _CartScreenState extends State<CartScreen> {
               IconButton(onPressed: (){}, icon: Icon(Icons.delete_forever, color: Colors.black,))
             ],
           ),
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  'Your Cart Is Empty!',
-                  style: TextStyle(fontSize: 30),
-                ),
-                const SizedBox(
-                  height: 50,
-                ),
-                Material(
-                  color: Colors.lightBlueAccent,
-                  borderRadius: BorderRadius.circular(25),
-                  child: MaterialButton(
-                    minWidth: MediaQuery.of(context).size.width * 0.6,
-                    onPressed:  (){
-                      Navigator.canPop(context) ?
-                        Navigator.pop(context) :
-                        Navigator.pushReplacementNamed(
-                          context,
-                          '/customer_home_screen',
-                      )
-                      ;
-                    },
-                    child: const Text(
-                      'continue shopping',
-                      style: TextStyle(fontSize: 18, color: Colors.white),
-                    ),
-                  ),
-                )
-
-              ],
-            ),
-          ),
+          body: Consumer<Cart>(builder: (context, cart, child) {
+            return ListView.builder(
+                itemCount: cart.count,
+                itemBuilder: (context, index) {
+                return Text(cart.getItems[index].name);
+            });
+          }),
           bottomSheet: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

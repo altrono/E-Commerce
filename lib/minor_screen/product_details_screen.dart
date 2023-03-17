@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper_null_safety/flutter_swiper_null_safety.dart';
+import 'package:provider/provider.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import 'package:zando/main_screens/cart.dart';
 import 'package:zando/main_screens/visit_store.dart';
+import 'package:zando/providers/cart_provider.dart';
 import 'package:zando/widgets/appbar_widgets.dart';
 import 'package:zando/widgets/yellow_button.dart';
 
@@ -210,7 +212,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     icon: const Icon(Icons.shopping_cart)),
                   ],
                 ),
-                YellowButton(label: 'ADD TO CART', onPressed: (){}, width: 0.55)
+                YellowButton(label: 'ADD TO CART', onPressed: (){
+                  context.read<Cart>().addItem(
+                      widget.proList['proname'],
+                      widget.proList['price'],
+                      1,
+                      widget.proList['intock'],
+                      widget.proList['proimages'],
+                      widget.proList['proid'],
+                      widget.proList['sid'],
+                  );
+                }, width: 0.55)
               ],
             ),
           ),
